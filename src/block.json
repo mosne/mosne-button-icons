@@ -26,6 +26,7 @@
 			"margin": true
 		},
 		"border": {
+			"all": true,
 			"radius": true,
 			"width": true,
 			"style": true,
