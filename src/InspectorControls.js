@@ -17,9 +17,10 @@ import {
 } from '@wordpress/components';
 
 /**
- * All available icons.
- * (Order determines ptygjhyresentation order)
+ * All enanced blocks.
  */
+
+const enanceBlocks = ['core/button', 'mosne/button-icons'];
 
 
 /**
@@ -29,8 +30,9 @@ import {
  * @param {Object} settings
  */
 function addAttributes(settings) {
-    if ('core/button' !== settings.name) {
-        return settings;
+
+    if (!enanceBlocks.includes(settings.name)) {
+      return settings;
     }
 
     // Add the block visibility attributes.
@@ -65,7 +67,7 @@ addFilter(
  */
 function addInspectorControls(BlockEdit) {
     return (props) => {
-        if (props.name !== 'core/button') {
+        if (!enanceBlocks.includes(props.name)) {
             return <BlockEdit {...props} />;
         }
 
@@ -136,15 +138,16 @@ function addClasses(BlockListBlock) {
     return (props) => {
         const {name, attributes} = props;
 
-        if ('core/button' !== name || !attributes?.icon) {
+        if (!enanceBlocks.includes(name) || attributes?.icon) {
             return <BlockListBlock {...props} />;
         }
 
         const classes = classnames(props?.className, {
-            [`has-icon has-icon__${attributes?.icon}`]: attributes?.icon,
+            [`has-icon__${attributes?.icon}`]: attributes?.icon,
         });
 
         return <BlockListBlock {...props} className={classes}/>;
+
     };
 }
 
@@ -155,8 +158,8 @@ addFilter(
 );
 
 function addClassesSave(props, blockType, attributes) {
-    if ('core/button' !== blockType.name) {
-        return props;
+    if (!enanceBlocks.includes(blockType.name)) {
+      return props;
     }
 
     props.className = classnames(props.className, {

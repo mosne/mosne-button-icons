@@ -10,28 +10,29 @@
   "example": {},
   "supports": {
     "align": true,
+    "textAlign": true,
     "anchor": true,
-    "className": true,
-    "customClassName": true,
-    "fontSize": true,
-    "html": false,
-    "reusable": true,
-    "spacing": true,
-    "textColor": true,
-    "typography": true,
-    "background": {
-      "color": true,
-      "gradient": true
+    "typography": {
+      "fontSize": true
     },
-    "dimensions": true,
-    "link": true,
-    "layout": true,
-    "margin": true,
-    "padding": true
+    "html": false,
+    "color": {
+      "text": true,
+      "background": true,
+      "gradients": true
+    },
+    "spacing": {
+      "padding": true,
+      "margin": true
+    },
+    "border": {
+      "radius": true,
+      "width": true,
+      "style": true,
+      "color": true
+    }
   },
   "textdomain": "mosne-button-icons",
   "editorScript": "file:./index.js",
-  "editorStyle": "file:./index.css",
-  "style": "file:./style-index.css",
-  "viewScript": "file:./view.js"
+  "style": "file:./style-index.css"
 }
