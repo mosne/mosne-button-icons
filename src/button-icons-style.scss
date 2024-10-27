@@ -4,6 +4,7 @@ body {
     --button-icon-margin:  0;
 }
 
+.wp-block-mosne-button-icons,
 .wp-block-button {
     --button-icon-size: 1em;
     --button-icon-margin:  -.25em .5em -.25em .5em;
@@ -25,4 +26,9 @@ body {
     mask-image: var(--button-icon-url);
     -webkit-mask-image:  var(--button-icon-url);
     line-height: 1;
+}
+
+.wp-block-mosne-button-icons{
+    line-height: 1;
+    text-align: center;
 }

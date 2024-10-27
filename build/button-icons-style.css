@@ -1,1 +1,39 @@
-body{--button-icon-url:url("data:image/svg+xml;utf8,<svg width=%2716%27 height=%2716%27 xmlns=%27http://www.w3.org/2000/svg%27><path d=%27M0 2.839A2.839 2.839 0 0 1 2.839 0H13.16A2.839 2.839 0 0 1 16 2.839V13.16A2.839 2.839 0 0 1 13.161 16H2.84A2.839 2.839 0 0 1 0 13.161V2.84Zm2.839-1.29a1.29 1.29 0 0 0-1.29 1.29V13.16c0 .713.577 1.29 1.29 1.29H13.16a1.29 1.29 0 0 0 1.29-1.29V2.84a1.29 1.29 0 0 0-1.29-1.29H2.84Z%27/></svg>");--button-icon-size:40px;--button-icon-margin:0}.wp-block-button{--button-icon-size:1em;--button-icon-margin:-.25em .5em -.25em .5em}.wp-block-mosne-button-icon__inline{background-color:currentColor;content:"=";display:inline-block;height:var(--button-icon-size);line-height:1;margin:var(--button-icon-margin);mask-image:var(--button-icon-url);-webkit-mask-image:var(--button-icon-url);-webkit-mask-position:center;mask-position:center;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:contain;mask-size:contain;width:var(--button-icon-size)}
+/*!****************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/button-icons-style.scss ***!
+  \****************************************************************************************************************************************************************************************************************************************************/
+body {
+  --button-icon-url: url( "data:image/svg+xml;utf8,<svg width=%2716%27 height=%2716%27 xmlns=%27http://www.w3.org/2000/svg%27><path d=%27M0 2.839A2.839 2.839 0 0 1 2.839 0H13.16A2.839 2.839 0 0 1 16 2.839V13.16A2.839 2.839 0 0 1 13.161 16H2.84A2.839 2.839 0 0 1 0 13.161V2.84Zm2.839-1.29a1.29 1.29 0 0 0-1.29 1.29V13.16c0 .713.577 1.29 1.29 1.29H13.16a1.29 1.29 0 0 0 1.29-1.29V2.84a1.29 1.29 0 0 0-1.29-1.29H2.84Z%27/></svg>" );
+  --button-icon-size: 40px;
+  --button-icon-margin: 0;
+}
+
+.wp-block-mosne-button-icons,
+.wp-block-button {
+  --button-icon-size: 1em;
+  --button-icon-margin: -.25em .5em -.25em .5em;
+}
+
+.wp-block-mosne-button-icon__inline {
+  content: "=";
+  display: inline-block;
+  background-color: currentColor;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  margin: var(--button-icon-margin);
+  width: var(--button-icon-size);
+  height: var(--button-icon-size);
+  mask-image: var(--button-icon-url);
+  -webkit-mask-image: var(--button-icon-url);
+  line-height: 1;
+}
+
+.wp-block-mosne-button-icons {
+  line-height: 1;
+  text-align: center;
+}
+
+/*# sourceMappingURL=button-icons-style.css.map*/

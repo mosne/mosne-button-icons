@@ -5,7 +5,6 @@
 	"version": "0.1.0",
 	"title": "Mosne Button Icons",
 	"category": "widgets",
-	"icon": "smiley",
 	"description": "Example block scaffolded with Create Block tool.",
 	"example": {},
 	"supports": {

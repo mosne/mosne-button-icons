@@ -1,5 +1,8 @@
+
+import classnames from 'classnames';
 import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
+import { applyFilters } from '@wordpress/hooks';
 import {
 	Button,
 	PanelRow,
@@ -7,7 +10,7 @@ import {
 	__experimentalGrid as Grid, // eslint-disable-line
 } from '@wordpress/components';
 import './editor.scss';
-export default function Edit({ attributes, setAttributes, name }) {
+export default function Edit({ attributes, setAttributes, className }) {
 
 	const { icon: currentIcon } = attributes;
 	// Get the icons from the filter and set a default
@@ -15,8 +18,14 @@ export default function Edit({ attributes, setAttributes, name }) {
 	const ICONS = applyFilters(
 		'mosne-button-icons.icons',
 		window.mosneButtonIcons.data ?? [],
-		name
+		'mosne/button-icons'
 	);
+
+	const classes = classnames( className, {
+		[ `has-icon has-icon__${ attributes?.icon }` ]: attributes?.icon,
+	} );
+
+
 	return (
 		<>
 			<InspectorControls>
@@ -61,7 +70,7 @@ export default function Edit({ attributes, setAttributes, name }) {
 					</PanelRow>
 				</PanelBody>
 			</InspectorControls>
-			<div {...useBlockProps()}>
+			<div {...useBlockProps({className: classes})}>
 			<span
 				className={'wp-block-mosne-button-icon__inline'}
 			>{'+'}
