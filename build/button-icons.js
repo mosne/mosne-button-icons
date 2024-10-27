@@ -108,6 +108,7 @@ function addAttributes(settings) {
  */
 function addInspectorControls(BlockEdit) {
   return props => {
+    var _window$mosne_button_;
     if (props.name !== 'core/button') {
       return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(BlockEdit, {
         ...props
@@ -122,23 +123,7 @@ function addInspectorControls(BlockEdit) {
     } = attributes;
     // Get the icons from the filter and set a default
     // icon can be filtered by block name
-    const ICONS = (0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_2__.applyFilters)('mosne-button-icons.icons', [{
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Arrow Right', 'mosne-button-icons'),
-      value: 'arrow-right',
-      url: 'http://localhost:10049/wp-content/plugins/mosne-button-icons/button-icons/arrow-right.svg'
-    }, {
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Arrow Left', 'mosne-button-icons'),
-      value: 'arrow-left',
-      url: 'http://localhost:10049/wp-content/plugins/mosne-button-icons/button-icons/arrow-left.svg'
-    }, {
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Download', 'mosne-button-icons'),
-      value: 'download',
-      url: 'http://localhost:10049/wp-content/plugins/mosne-button-icons/button-icons/download.svg'
-    }, {
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('External', 'mosne-button-icons'),
-      value: 'external',
-      url: 'http://localhost:10049/wp-content/plugins/mosne-button-icons/button-icons/external.svg'
-    }], props.name);
+    const ICONS = (0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_2__.applyFilters)('mosne-button-icons.icons', (_window$mosne_button_ = window.mosne_button_icons.data) !== null && _window$mosne_button_ !== void 0 ? _window$mosne_button_ : [], props.name);
     return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(BlockEdit, {
         ...props

@@ -48,6 +48,14 @@ function mosne_button_icons_block_editor_assets() {
 		plugin_dir_path( __FILE__ ) . 'languages'
 	);
 
+	wp_localize_script(
+		'mosne-button-icons-editor-scripts',
+		'mosne_button_icons',
+		[
+			'data' => mosne_block_icons_load_svg(),
+		]
+	);
+
 	wp_enqueue_style(
 		'mosne-button-icons-editor-styles',
 		plugin_dir_url( __FILE__ ) . 'build/button-icons-editor.css'
@@ -98,7 +106,5 @@ function mosne_block_icons_load_svg(): array {
 			'label' => str_replace( '-', ' ', $icon_name )
 		];
 	}
-	
 	return $data;
 }
-add_action( 'init', 'mosne_block_icons_load_svg' );

@@ -74,29 +74,7 @@ function addInspectorControls(BlockEdit) {
         // Get the icons from the filter and set a default
         // icon can be filtered by block name
         const ICONS = applyFilters(
-            'mosne-button-icons.icons',
-            [
-                {
-                    label: __('Arrow Right', 'mosne-button-icons'),
-                    value: 'arrow-right',
-                    url : 'http://localhost:10049/wp-content/plugins/mosne-button-icons/button-icons/arrow-right.svg',
-                },
-                {
-                    label: __('Arrow Left', 'mosne-button-icons'),
-                    value: 'arrow-left',
-                    url : 'http://localhost:10049/wp-content/plugins/mosne-button-icons/button-icons/arrow-left.svg',
-                },
-                {
-                    label: __('Download', 'mosne-button-icons'),
-                    value: 'download',
-                    url : 'http://localhost:10049/wp-content/plugins/mosne-button-icons/button-icons/download.svg',
-                },
-                {
-                    label: __('External', 'mosne-button-icons'),
-                    value: 'external',
-                    url : 'http://localhost:10049/wp-content/plugins/mosne-button-icons/button-icons/external.svg',
-                },
-            ],
+            'mosne-button-icons.icons',window.mosne_button_icons.data??[],
             props.name
         );
         return (
