@@ -74,7 +74,7 @@ function addInspectorControls(BlockEdit) {
         // Get the icons from the filter and set a default
         // icon can be filtered by block name
         const ICONS = applyFilters(
-            'mosne-button-icons.icons',window.mosne_button_icons.data??[],
+            'mosne-button-icons.icons',window.mosneButtonIcons.data??[],
             props.name
         );
         return (

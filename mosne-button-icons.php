@@ -27,13 +27,71 @@ if ( ! defined( 'ABSPATH' ) ) {
 function mosne_button_icons_block_init() {
 	register_block_type( __DIR__ . '/build' );
 }
+
 add_action( 'init', 'mosne_button_icons_block_init' );
+
+
+/**
+ * Load SVG icons from the theme and plugin.
+ */
+function mosne_block_icons_load_svg(): array {
+
+	// Scan our theme and plugin for SVG files.
+	$data = [];
+
+	$files    = glob( plugin_dir_path( __FILE__ ) . 'button-icons/*.svg' );
+	$base_uri = plugin_dir_url( __FILE__ ) . 'button-icons/';
+
+	foreach ( $files as $file ) {
+		if ( empty( $file ) || ! is_readable( $file ) ) {
+			continue;
+		}
+		$icon_name = basename( $file, '.svg' );
+		$data[]    = [
+			'value' => $icon_name,
+			'url'   => $base_uri . $icon_name . '.svg',
+			'label' => str_replace( '-', ' ', $icon_name )
+		];
+	}
+	// Load theme SVG files.
+	// mosne_button_icons_theme_dir allows developers to customize the theme directory.
+	$theme_dir = apply_filters( 'mosne_button_icons_theme_dir', 'button-icons' );
+	$files     = glob( get_template_directory() . '/' . $theme_dir . '/*.svg' );
+	$base_uri  = get_template_directory_uri() . '/' . $theme_dir . '/';
+
+	foreach ( $files as $file ) {
+		if ( empty( $file ) || ! is_readable( $file ) ) {
+			continue;
+		}
+		$icon_name = basename( $file, '.svg' );
+		$data[]    = [
+			'value' => $icon_name,
+			'url'   => $base_uri . $icon_name . '.svg',
+			'label' => str_replace( '-', ' ', $icon_name )
+		];
+	}
+
+	return $data;
+}
+
+/**
+ * @return string
+ */
+function mosne_block_icons_generate_css(): string {
+	$icons = mosne_block_icons_load_svg();
+	$css   = '';
+	foreach ( $icons as $icon ) {
+		$css .= ".has-icon__{$icon['value']} { --button-icon-url: url('{$icon['url']}'); }\n";
+	}
+
+	return $css;
+}
 
 /**
  * Enqueue Editor scripts and styles.
  */
 function mosne_button_icons_block_editor_assets() {
-	$asset_file  = include plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
+	$asset_file = include plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
 
 	wp_enqueue_script(
 		'mosne-button-icons-editor-scripts',
@@ -50,7 +108,7 @@ function mosne_button_icons_block_editor_assets() {
 
 	wp_localize_script(
 		'mosne-button-icons-editor-scripts',
-		'mosne_button_icons',
+		'mosneButtonIcons',
 		[
 			'data' => mosne_block_icons_load_svg(),
 		]
@@ -60,7 +118,13 @@ function mosne_button_icons_block_editor_assets() {
 		'mosne-button-icons-editor-styles',
 		plugin_dir_url( __FILE__ ) . 'build/button-icons-editor.css'
 	);
+
+	wp_add_inline_style(
+		'mosne-button-icons-editor-styles',
+		mosne_block_icons_generate_css(),
+	);
 }
+
 add_action( 'enqueue_block_editor_assets', 'mosne_button_icons_block_editor_assets' );
 
 /**
@@ -68,43 +132,25 @@ add_action( 'enqueue_block_editor_assets', 'mosne_button_icons_block_editor_asse
  * (Applies to both frontend and Editor)
  */
 function mosne_button_icons_block_styles() {
+
 	wp_enqueue_block_style(
 		'core/button',
 		array(
-			'handle' => 'mosne-button-icons-block-styles',
+			'handle' => 'mosne-button-icons-block-button-styles',
 			'src'    => plugin_dir_url( __FILE__ ) . 'build/button-icons-style.css',
 			'ver'    => wp_get_theme()->get( 'Version' ),
 			'path'   => plugin_dir_path( __FILE__ ) . 'build/button-icons-style.css',
 		)
 	);
 }
+
 add_action( 'init', 'mosne_button_icons_block_styles' );
 
-/**
- * Load SVG icons from the theme and plugin.
- */
-function mosne_block_icons_load_svg(): array {
 
-	// Scan our theme and plugin for SVG files.
-	$theme_files = glob( get_template_directory() . '/button-icons/*.svg' );
-	$plugin_files = glob( plugin_dir_path( __FILE__ ). 'button-icons/*.svg' );
-	$files = array_merge( $theme_files, $plugin_files );
-
-	$data = [];
-
-	foreach ( $files as $file ) {
-		if ( empty( $file ) || ! is_readable( $file ) ) {
-			continue;
-		}
-
-		$icon_name = basename( $file, '.svg' );
-		// use get_template_directory_uri for theme and plugin_dir_url for plugin
-		$base_uri = ( strpos( $file, get_template_directory() ) !== false ) ? get_template_directory_uri().'/' : plugin_dir_url( __FILE__ );
-		$data[ ] = [
-			'value' => $icon_name,
-			'url'   => $base_uri. 'button-icons/' . $icon_name . '.svg',
-			'label' => str_replace( '-', ' ', $icon_name )
-		];
-	}
-	return $data;
+function mosne_button_icons_inline_css() {
+	wp_add_inline_style(
+		'mosne-button-icons-block-button-styles',
+		mosne_block_icons_generate_css(),
+	);
 }
+add_action('wp_enqueue_scripts', 'mosne_button_icons_inline_css');
