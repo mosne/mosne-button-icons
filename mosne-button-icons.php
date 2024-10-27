@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
 function mosne_button_icons_block_init() {
-	register_block_type( __DIR__ . '/build' );
+	// register_block_type( __DIR__ . '/build' );
 }
 
 add_action( 'init', 'mosne_button_icons_block_init' );

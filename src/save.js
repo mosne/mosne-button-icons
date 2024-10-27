@@ -1,10 +1,12 @@
-import { RichText, useBlockProps } from '@wordpress/block-editor';
+import { useBlockProps } from '@wordpress/block-editor';
 export default function save() {
 	return (
-		<div { ...useBlockProps.save(
-			{ariaHidden: true}
-		) }>
-			{ '=' }
+		<div {...useBlockProps.save()}>
+			<span
+				ariaHidden={true}
+				className={'wp-block-mosne-button-icon__inline'}
+			>{'+'}
+			</span>
 		</div>
 	);
 }
