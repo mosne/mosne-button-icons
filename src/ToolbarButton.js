@@ -52,18 +52,18 @@ registerFormatType( name, {
 
 registerBlockVariation('core/button', {
   name: 'button-icon-right',
-  title: 'Icon right',
+  title: __( 'Button + Icon Right', 'mosne-button-icons' ),
   attributes: {
-    text: 'Button <span class="wp-block-mosne-button-icon__inline" aria-hidde="true">+</span>',
+    text: `${__( 'Button', 'mosne-button-icons' )} <span class="wp-block-mosne-button-icon__inline" aria-hidde="true">+</span>`,
     url: '',
   },
 });
 
 registerBlockVariation('core/button', {
   name: 'button-icon-left',
-  title: 'Icon left',
+  title: __( 'Button + Icon Left', 'mosne-button-icons' ),
   attributes: {
-    text: '<span class="wp-block-mosne-button-icon__inline" aria-hidde="true">+</span> Button',
+    text: `<span class="wp-block-mosne-button-icon__inline" aria-hidde="true">+</span> ${__( 'Button', 'mosne-button-icons' )}`,
     url: '',
   },
 });
