@@ -415,7 +415,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"mosne/button-icons","version":"0.1.0","title":"Mosne Button Icons","category":"widgets","description":"Example block scaffolded with Create Block tool.","example":{},"supports":{"align":true,"anchor":true,"customClassName":true,"html":false,"reusable":true,"spacing":{"margin":true,"padding":true},"typography":{"fontSize":true},"color":{"text":true,"background":true,"gradient":true},"border":{"all":true,"radius":true}},"attributes":{"icon":{"type":"string","default":""}},"textdomain":"mosne-button-icons","editorScript":"file:./index.js","style":"file:./style-index.css"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"mosne/button-icons","version":"0.1.0","title":"Mosne Button Icons","category":"widgets","description":"Example block scaffolded with Create Block tool.","example":{},"supports":{"align":true,"anchor":true,"customClassName":true,"html":false,"reusable":true,"spacing":{"margin":true,"padding":true},"typography":{"fontSize":true},"color":{"text":true,"background":true,"gradient":true},"__experimentalBorder":{"color":true,"radius":true,"style":true,"width":true,"__experimentalDefaultControls":{"color":true,"radius":true,"style":true,"width":true}}},"attributes":{"icon":{"type":"string","default":""}},"textdomain":"mosne-button-icons","editorScript":"file:./index.js","style":"file:./style-index.css"}');
 
 /***/ })
 
