@@ -1,11 +1,16 @@
 /*!*****************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/button-icons-editor.scss ***!
   \*****************************************************************************************************************************************************************************************************************************************************/
-.button-icon-picker {
-  grid-column: 1/-1;
+.mosne-button-icons__picker .wp-block-mosne-button-icon__inline {
+  overflow: hidden;
+  text-indent: -999px;
+  transform: scale(0.5);
+  border-radius: 4px;
+  transition: transform 0.35s;
 }
-.button-icon-picker .block-editor-block-styles__item-text {
-  justify-content: center;
+.mosne-button-icons__picker .wp-block-mosne-button-icon__inline.is-pressed {
+  transform: scale(0.75);
+  background-color: var(--wp-components-color-accent, var(--wp-admin-theme-color, #3858e9)) !important;
 }
 
 /*# sourceMappingURL=button-icons-editor.css.map*/

@@ -12,6 +12,7 @@ import {InspectorControls} from '@wordpress/block-editor';
 import {
     Button,
     PanelRow,
+    PanelBody,
     __experimentalGrid as Grid, // eslint-disable-line
 } from '@wordpress/components';
 
@@ -78,18 +79,22 @@ function addInspectorControls(BlockEdit) {
                 {
                     label: __('Arrow Right', 'mosne-button-icons'),
                     value: 'arrow-right',
+                    url : 'http://localhost:10049/wp-content/plugins/mosne-button-icons/button-icons/arrow-right.svg',
                 },
                 {
                     label: __('Arrow Left', 'mosne-button-icons'),
                     value: 'arrow-left',
+                    url : 'http://localhost:10049/wp-content/plugins/mosne-button-icons/button-icons/arrow-left.svg',
                 },
                 {
                     label: __('Download', 'mosne-button-icons'),
                     value: 'download',
+                    url : 'http://localhost:10049/wp-content/plugins/mosne-button-icons/button-icons/download.svg',
                 },
                 {
                     label: __('External', 'mosne-button-icons'),
                     value: 'external',
+                    url : 'http://localhost:10049/wp-content/plugins/mosne-button-icons/button-icons/external.svg',
                 },
             ],
             props.name
@@ -97,36 +102,40 @@ function addInspectorControls(BlockEdit) {
         return (
             <>
                 <BlockEdit {...props} />
-                <InspectorControls group="color">
-                    <div className="button-icon-picker">
+                <InspectorControls>
+                <PanelBody title={__('Button Icons', 'mosne-button-icons')}>
+                <PanelRow>
+                      <div className="mosne-button-icons__picker">
                         <Grid
                             className="block-editor-block-styles__variants"
-                            columns="2"
+                            columns="4"
                             gap="4"
                         >
                             {ICONS.map((icon, index) => (
                                 <Button
-                                    key={index}
-                                    label={icon?.label}
-                                    isPressed={currentIcon === icon.value}
-                                    className="components-button is-secondary block-editor-block-styles__item-text"
-                                    onClick={() =>
-                                        setAttributes({
-                                            // Allow user to disable icons.
-                                            icon:
-                                                currentIcon === icon.value
-                                                    ? null
-                                                    : icon.value,
-                                        })
-                                    }
-                                >
-                                    <span className="components-truncate">
-                                        {icon.label}
-                                    </span>
-                                </Button>
+                                key={ index }
+                                label={ icon?.label }
+                                title={ icon?.label }
+                                style={{'--button-icon-url': `url(${icon.url})`}}
+                                isPressed={ currentIcon === icon.value }
+                                className="wp-block-mosne-button-icon__inline"
+                                onClick={ () =>
+                                  setAttributes( {
+                                    // Allow user to disable icons.
+                                    icon:
+                                      currentIcon === icon.value
+                                        ? null
+                                        : icon.value,
+                                  } )
+                                }
+                              >
+                                { icon.icon ?? icon.value }
+                              </Button>
                             ))}
                         </Grid>
                     </div>
+                </PanelRow>
+                </PanelBody>
                 </InspectorControls>
             </>
         );

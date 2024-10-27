@@ -124,41 +124,53 @@ function addInspectorControls(BlockEdit) {
     // icon can be filtered by block name
     const ICONS = (0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_2__.applyFilters)('mosne-button-icons.icons', [{
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Arrow Right', 'mosne-button-icons'),
-      value: 'arrow-right'
+      value: 'arrow-right',
+      url: 'http://localhost:10049/wp-content/plugins/mosne-button-icons/button-icons/arrow-right.svg'
     }, {
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Arrow Left', 'mosne-button-icons'),
-      value: 'arrow-left'
+      value: 'arrow-left',
+      url: 'http://localhost:10049/wp-content/plugins/mosne-button-icons/button-icons/arrow-left.svg'
     }, {
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Download', 'mosne-button-icons'),
-      value: 'download'
+      value: 'download',
+      url: 'http://localhost:10049/wp-content/plugins/mosne-button-icons/button-icons/download.svg'
     }, {
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('External', 'mosne-button-icons'),
-      value: 'external'
+      value: 'external',
+      url: 'http://localhost:10049/wp-content/plugins/mosne-button-icons/button-icons/external.svg'
     }], props.name);
     return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(BlockEdit, {
         ...props
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InspectorControls, {
-        group: "color",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
-          className: "button-icon-picker",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.__experimentalGrid, {
-            className: "block-editor-block-styles__variants",
-            columns: "2",
-            gap: "4",
-            children: ICONS.map((icon, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
-              label: icon?.label,
-              isPressed: currentIcon === icon.value,
-              className: "components-button is-secondary block-editor-block-styles__item-text",
-              onClick: () => setAttributes({
-                // Allow user to disable icons.
-                icon: currentIcon === icon.value ? null : icon.value
-              }),
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("span", {
-                className: "components-truncate",
-                children: icon.label
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.PanelBody, {
+          title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Button Icons', 'mosne-button-icons'),
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.PanelRow, {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
+              className: "mosne-button-icons__picker",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.__experimentalGrid, {
+                className: "block-editor-block-styles__variants",
+                columns: "4",
+                gap: "4",
+                children: ICONS.map((icon, index) => {
+                  var _icon$icon;
+                  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
+                    label: icon?.label,
+                    title: icon?.label,
+                    style: {
+                      '--button-icon-url': `url(${icon.url})`
+                    },
+                    isPressed: currentIcon === icon.value,
+                    className: "wp-block-mosne-button-icon__inline",
+                    onClick: () => setAttributes({
+                      // Allow user to disable icons.
+                      icon: currentIcon === icon.value ? null : icon.value
+                    }),
+                    children: (_icon$icon = icon.icon) !== null && _icon$icon !== void 0 ? _icon$icon : icon.value
+                  }, index);
+                })
               })
-            }, index))
+            })
           })
         })
       })]
@@ -269,7 +281,7 @@ const ButtonIconsEdit = ({
   title: title,
   name: name,
   tagName: 'span',
-  className: 'wp-block-button__icon',
+  className: 'wp-block-mosne-button-icon__inline',
   ariaHidden: true,
   edit: ButtonIconsEdit
 });
@@ -277,7 +289,7 @@ const ButtonIconsEdit = ({
   name: 'button-icon-right',
   title: 'Icon right',
   attributes: {
-    text: 'Button <span class="wp-block-button__icon" aria-hidde="true">+</span>',
+    text: 'Button <span class="wp-block-mosne-button-icon__inline" aria-hidde="true">+</span>',
     url: ''
   }
 });
@@ -285,7 +297,7 @@ const ButtonIconsEdit = ({
   name: 'button-icon-left',
   title: 'Icon left',
   attributes: {
-    text: '<span class="wp-block-button__icon" aria-hidde="true">+</span> Button',
+    text: '<span class="wp-block-mosne-button-icon__inline" aria-hidde="true">+</span> Button',
     url: ''
   }
 });

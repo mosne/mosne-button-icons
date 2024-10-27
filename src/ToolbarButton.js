@@ -44,7 +44,7 @@ registerFormatType( name, {
     title: title,
     name: name,
     tagName: 'span',
-    className: 'wp-block-button__icon',
+    className: 'wp-block-mosne-button-icon__inline',
     ariaHidden: true,
     edit: ButtonIconsEdit,
 } );
@@ -54,7 +54,7 @@ registerBlockVariation('core/button', {
   name: 'button-icon-right',
   title: 'Icon right',
   attributes: {
-    text: 'Button <span class="wp-block-button__icon" aria-hidde="true">+</span>',
+    text: 'Button <span class="wp-block-mosne-button-icon__inline" aria-hidde="true">+</span>',
     url: '',
   },
 });
@@ -63,7 +63,7 @@ registerBlockVariation('core/button', {
   name: 'button-icon-left',
   title: 'Icon left',
   attributes: {
-    text: '<span class="wp-block-button__icon" aria-hidde="true">+</span> Button',
+    text: '<span class="wp-block-mosne-button-icon__inline" aria-hidde="true">+</span> Button',
     url: '',
   },
 });

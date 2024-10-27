@@ -71,3 +71,34 @@ function mosne_button_icons_block_styles() {
 	);
 }
 add_action( 'init', 'mosne_button_icons_block_styles' );
+
+/**
+ * Load SVG icons from the theme and plugin.
+ */
+function mosne_block_icons_load_svg(): array {
+
+	// Scan our theme and plugin for SVG files.
+	$theme_files = glob( get_template_directory() . '/button-icons/*.svg' );
+	$plugin_files = glob( plugin_dir_path( __FILE__ ). 'button-icons/*.svg' );
+	$files = array_merge( $theme_files, $plugin_files );
+
+	$data = [];
+
+	foreach ( $files as $file ) {
+		if ( empty( $file ) || ! is_readable( $file ) ) {
+			continue;
+		}
+
+		$icon_name = basename( $file, '.svg' );
+		// use get_template_directory_uri for theme and plugin_dir_url for plugin
+		$base_uri = ( strpos( $file, get_template_directory() ) !== false ) ? get_template_directory_uri().'/' : plugin_dir_url( __FILE__ );
+		$data[ ] = [
+			'value' => $icon_name,
+			'url'   => $base_uri. 'button-icons/' . $icon_name . '.svg',
+			'label' => str_replace( '-', ' ', $icon_name )
+		];
+	}
+	
+	return $data;
+}
+add_action( 'init', 'mosne_block_icons_load_svg' );
