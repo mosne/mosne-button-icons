@@ -18,7 +18,8 @@
 			"padding": true
 		},
 		"typography": {
-			"fontSize": true
+			"fontSize": true,
+			"textAlign": true
 		},
 		"color":{
 			"text": true,
@@ -42,6 +43,14 @@
 		"icon": {
 			"type": "string",
 			"default": ""
+		},
+		"style": {
+			"type": "object",
+			"default": {
+				"typography": {
+					"textAlign": "center"
+				}
+			}
 		}
 	},
 	"textdomain": "mosne-button-icons",
