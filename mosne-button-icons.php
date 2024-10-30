@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Mosne Button Icons
- * Description:       Example block scaffolded with Create Block tool.
+ * Description:       Add SVG icons with ease to your theme's buttons and content.
  * Requires at least: 6.6
  * Requires PHP:      7.2
  * Version:           0.1.0

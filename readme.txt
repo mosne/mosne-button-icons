@@ -6,14 +6,15 @@ Stable tag:        0.1.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-Example block scaffolded with Create Block tool.
+Add SVG icons with ease to your theme's buttons and content.
 
 == Description ==
 
-This is the long description. No limit, and you can use Markdown (as well as in the following sections).
-
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
+This plugin provides:
+1. An Inline icon block inside the the core button block
+2. Two block variations for the core button block: Icon Before and Icon After
+3. An Icon block to use the SVG icons in the block editor
+The svg assets are automatically added from the `button-icons` directory present in the theme or child theme.
 
 == Installation ==
 

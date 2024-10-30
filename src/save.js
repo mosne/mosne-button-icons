@@ -8,7 +8,7 @@ export default function save({className, attributes}) {
 	return (
 		<div {...useBlockProps.save({className:classes })}>
 			<span
-				ariaHidden={true}
+				aria-hidden={'true'}
 				className={'wp-block-mosne-button-icon__inline'}
 			>{'+'}
 			</span>

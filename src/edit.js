@@ -72,6 +72,7 @@ export default function Edit({ attributes, setAttributes, className }) {
 			</InspectorControls>
 			<div {...useBlockProps({className: classes})}>
 			<span
+				aria-hidden={'true'}
 				className={'wp-block-mosne-button-icon__inline'}
 			>{'+'}
 			</span>
