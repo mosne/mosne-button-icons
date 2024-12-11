@@ -21,7 +21,7 @@
 			"fontSize": true,
 			"textAlign": true
 		},
-		"color":{
+		"color": {
 			"text": true,
 			"background": true,
 			"gradient": true
