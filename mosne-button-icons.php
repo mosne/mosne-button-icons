@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
 function mosne_button_icons_block_init() {
-	 register_block_type( __DIR__ . '/build' );
+	register_block_type( __DIR__ . '/build' );
 }
 
 add_action( 'init', 'mosne_button_icons_block_init' );
@@ -71,7 +71,7 @@ function mosne_block_icons_load_svg(): array {
 		];
 	}
 
-	return $data;
+	return apply_filters( 'mosne_block_icons_data', $data );
 }
 
 /**
@@ -81,7 +81,7 @@ function mosne_block_icons_generate_css(): string {
 	$icons = mosne_block_icons_load_svg();
 	$css   = '';
 	foreach ( $icons as $icon ) {
-		$css .= ".has-icon__{$icon['value']} { --button-icon-url: url('{$icon['url']}'); }\n";
+		$css .= ".has-icon__{$icon['value']}, .wp-block-mosne-button-icon__inline[data-icon='{$icon['value']}'] { --button-icon-url: url('{$icon['url']}'); }\n";
 	}
 
 	return $css;
@@ -153,4 +153,5 @@ function mosne_button_icons_inline_css() {
 		mosne_block_icons_generate_css(),
 	);
 }
-add_action('wp_enqueue_scripts', 'mosne_button_icons_inline_css');
+
+add_action( 'wp_enqueue_scripts', 'mosne_button_icons_inline_css' );

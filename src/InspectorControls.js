@@ -82,7 +82,7 @@ function addInspectorControls( BlockEdit ) {
 				<BlockEdit { ...props } />
 				<InspectorControls>
 					<PanelBody
-						title={ __( 'Button Icons', 'mosne-button-icons' ) }
+						title={ __( 'Icons', 'mosne-button-icons' ) }
 					>
 						<PanelRow>
 							<div className="mosne-button-icons__picker">

@@ -19,9 +19,11 @@ const ButtonIconsEdit = ( { isActive, onChange, onFocus, value } ) => {
 	}, [] );
 
 	// allow only in button blocks
+	/*
 	if ( selectedBlock && selectedBlock.name !== 'core/button' ) {
 		return null;
 	}
+		*/
 
 	return (
 		<>
