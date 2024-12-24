@@ -46,9 +46,11 @@ const mosneIconEdit = ( {
 
 	const toolbarButtonOnClick = () => {
 		if ( ! isActive ) {
+			console.log( 'not isActive', isActive );
 			setShowPopover( true );
 		} else {
-			setShowPopover( false );
+			console.log( 'not isActive', isActive );
+			setShowPopover( true );
 			onChange( removeFormat( value, mosneIconFormatName ) );
 		}
 	};
@@ -75,15 +77,6 @@ const mosneIconEdit = ( {
 		onChange( removeFormat( value, mosneIconFormatName ) );
 		setShowPopover( false );
 	};
-
-	if ( isActive && ! showPopover) {
-		setShowPopover( true );
-	}
-
-	if ( ! isActive && showPopover ) {
-		setShowPopover( false );
-	}
-
 
 	const ICONS = applyFilters(
 		'mosne-button-icons.icons',
