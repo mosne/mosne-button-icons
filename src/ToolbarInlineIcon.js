@@ -37,23 +37,27 @@ const mosneIconEdit = ( {
 	onChange,
 	contentRef,
 } ) => {
-	const [ iconSize, setIconSize ] = useState( 20 );
+	const [ iconSize, setIconSize ] = useState(16);
 	const [ currentIcon, setCurrentIcon ] = useState( '' );
 	const [ showPopover, setShowPopover ] = useState( false );
-	const anchorRef = useAnchor( {
-		editableContentElement: contentRef.current,
-	} );
+	const anchorRef = useAnchor({ editableContentElement: contentRef.current });
+
 
 	const toolbarButtonOnClick = () => {
 		if ( ! isActive ) {
 			console.log( 'not isActive', isActive );
 			setShowPopover( true );
 		} else {
-			console.log( 'not isActive', isActive );
+			console.log( 'yes isActive', isActive );
 			setShowPopover( true );
 			onChange( removeFormat( value, mosneIconFormatName ) );
 		}
 	};
+
+	if ( isActive && ! showPopover ) {
+		setShowPopover( true );
+	}
+
 
 	const saveMosneIcon= () => {
 		if ( currentIcon ) {
@@ -67,8 +71,6 @@ const mosneIconEdit = ( {
 					},
 				} )
 			);
-		} else {
-			onChange( removeFormat( value, mosneIconFormatName ) );
 		}
 		setShowPopover( false );
 		};
@@ -95,7 +97,7 @@ const mosneIconEdit = ( {
 				/>
 				{ showPopover && (
 					<Popover
-						anchor={ anchorRef }
+
 						className="mosne-icon-popover"
 						onClose={ () => setShowPopover( false ) }
 					>
@@ -159,10 +161,4 @@ const mosneIconEdit = ( {
 	);
 };
 
-registerFormatType( mosneIconFormatName, {
-	title: __( 'Inline Icons', 'mosne-button-icons' ),
-	tagName: 'span',
-	className: 'wp-block-mosne-button-icon__inline',
-	ariaHidden: 'true',
-	edit: mosneIconEdit,
-} );
+
