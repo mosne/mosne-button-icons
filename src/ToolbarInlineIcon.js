@@ -97,7 +97,6 @@ const mosneIconEdit = ( {
 				/>
 				{ showPopover && (
 					<Popover
-
 						className="mosne-icon-popover"
 						onClose={ () => setShowPopover( false ) }
 					>
@@ -161,4 +160,10 @@ const mosneIconEdit = ( {
 	);
 };
 
-
+registerFormatType( mosneIconFormatName, {
+	title: __( 'Inline Icons', 'mosne-button-icons' ),
+	tagName: 'span',
+	className: 'wp-block-mosne-button-icon__inline',
+	ariaHidden: 'true',
+	edit: mosneIconEdit,
+} );
