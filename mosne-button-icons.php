@@ -1,157 +1,228 @@
 <?php
 /**
  * Plugin Name:       Mosne Button Icons
- * Description:       Add SVG icons with ease to your theme's buttons and content.
- * Requires at least: 6.6
+ * Description:       Insert WordPress icons inline in Rich Text, the same way as inline images.
+ * Requires at least: 7.1
  * Requires PHP:      7.2
- * Version:           0.1.0
+ * Version:           0.2.0
  * Author:            The WordPress Contributors
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       mosne-button-icons
  *
- * @package CreateBlock
+ * @package MosneButtonIcons
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
 
 /**
- * Registers the block using the metadata loaded from the `block.json` file.
- * Behind the scenes, it registers also all assets so they can be enqueued
- * through the block editor in the corresponding context.
+ * Loads the plugin text domain.
  *
- * @see https://developer.wordpress.org/reference/functions/register_block_type/
+ * @since 0.2.0
+ * @return void
  */
-function mosne_button_icons_block_init() {
-	register_block_type( __DIR__ . '/build' );
+function mosne_button_icons_load_textdomain() {
+	load_plugin_textdomain(
+		'mosne-button-icons',
+		false,
+		dirname( plugin_basename( __FILE__ ) ) . '/languages'
+	);
 }
-
-add_action( 'init', 'mosne_button_icons_block_init' );
-
+add_action( 'init', 'mosne_button_icons_load_textdomain', 0 );
 
 /**
- * Load SVG icons from the theme and plugin.
+ * Returns whether the Icons API is available.
+ *
+ * @since 0.2.0
+ * @return bool
  */
-function mosne_block_icons_load_svg(): array {
-
-	// Scan our theme and plugin for SVG files.
-	$data = [];
-
-	$files    = glob( plugin_dir_path( __FILE__ ) . 'button-icons/*.svg' );
-	$base_uri = plugin_dir_url( __FILE__ ) . 'button-icons/';
-
-	foreach ( $files as $file ) {
-		if ( empty( $file ) || ! is_readable( $file ) ) {
-			continue;
-		}
-		$icon_name = basename( $file, '.svg' );
-		$data[]    = [
-			'value' => $icon_name,
-			'url'   => $base_uri . $icon_name . '.svg',
-			'label' => str_replace( '-', ' ', $icon_name )
-		];
-	}
-	// Load theme SVG files.
-	// mosne_button_icons_theme_dir allows developers to customize the theme directory.
-	$theme_dir = apply_filters( 'mosne_button_icons_theme_dir', 'button-icons' );
-	$files     = glob( get_template_directory() . '/' . $theme_dir . '/*.svg' );
-	$base_uri  = get_template_directory_uri() . '/' . $theme_dir . '/';
-
-	foreach ( $files as $file ) {
-		if ( empty( $file ) || ! is_readable( $file ) ) {
-			continue;
-		}
-		$icon_name = basename( $file, '.svg' );
-		$data[]    = [
-			'value' => $icon_name,
-			'url'   => $base_uri . $icon_name . '.svg',
-			'label' => str_replace( '-', ' ', $icon_name )
-		];
-	}
-
-	return apply_filters( 'mosne_block_icons_data', $data );
+function mosne_button_icons_has_icons_api() {
+	return function_exists( 'wp_get_icon' ) && class_exists( 'WP_Icons_Registry' );
 }
 
 /**
+ * Builds CSS mask rules so empty inline icon spans preview in the editor.
+ *
+ * @since 0.2.0
  * @return string
  */
-function mosne_block_icons_generate_css(): string {
-	$icons = mosne_block_icons_load_svg();
+function mosne_button_icons_get_mask_css() {
+	if ( ! mosne_button_icons_has_icons_api() ) {
+		return '';
+	}
+
+	$icons = WP_Icons_Registry::get_instance()->get_registered_icons();
 	$css   = '';
+
 	foreach ( $icons as $icon ) {
-		$css .= ".has-icon__{$icon['value']}, .wp-block-mosne-button-icon__inline[data-icon='{$icon['value']}'] { --button-icon-url: url('{$icon['url']}'); }\n";
+		if ( empty( $icon['name'] ) || empty( $icon['content'] ) ) {
+			continue;
+		}
+
+		$mask = 'url("data:image/svg+xml,' . rawurlencode( $icon['content'] ) . '")';
+		$css .= sprintf(
+			'.wp-inline-icon[data-icon="%s"]{--wp-inline-icon-mask:%s;}',
+			esc_attr( $icon['name'] ),
+			$mask
+		);
 	}
 
 	return $css;
 }
 
 /**
- * Enqueue Editor scripts and styles.
+ * Enqueues editor script and styles.
+ *
+ * @since 0.2.0
+ * @return void
  */
-function mosne_button_icons_block_editor_assets() {
-	$asset_file = include plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
+function mosne_button_icons_enqueue_editor_assets() {
+	$asset_path = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
+	if ( ! file_exists( $asset_path ) ) {
+		return;
+	}
+
+	$asset_file = include $asset_path;
 
 	wp_enqueue_script(
-		'mosne-button-icons-editor-scripts',
-		plugin_dir_url( __FILE__ ) . 'build/button-icons.js',
+		'mosne-button-icons-editor',
+		plugin_dir_url( __FILE__ ) . 'build/index.js',
 		$asset_file['dependencies'],
-		$asset_file['version']
+		$asset_file['version'],
+		array( 'in_footer' => true )
 	);
 
 	wp_set_script_translations(
-		'mosne-button-icons-editor-scripts',
+		'mosne-button-icons-editor',
 		'mosne-button-icons',
 		plugin_dir_path( __FILE__ ) . 'languages'
 	);
 
-	wp_localize_script(
-		'mosne-button-icons-editor-scripts',
-		'mosneButtonIcons',
-		[
-			'data' => mosne_block_icons_load_svg(),
-		]
-	);
-
-	wp_enqueue_style(
-		'mosne-button-icons-editor-styles',
-		plugin_dir_url( __FILE__ ) . 'build/button-icons-editor.css'
-	);
-
-	wp_add_inline_style(
-		'mosne-button-icons-editor-styles',
-		mosne_block_icons_generate_css(),
-	);
+	$editor_style = plugin_dir_path( __FILE__ ) . 'build/index.css';
+	if ( file_exists( $editor_style ) ) {
+		wp_enqueue_style(
+			'mosne-button-icons-editor',
+			plugin_dir_url( __FILE__ ) . 'build/index.css',
+			array(),
+			$asset_file['version']
+		);
+	}
 }
-
-add_action( 'enqueue_block_editor_assets', 'mosne_button_icons_block_editor_assets' );
+add_action( 'enqueue_block_editor_assets', 'mosne_button_icons_enqueue_editor_assets' );
 
 /**
- * Enqueue block styles
- * (Applies to both frontend and Editor)
+ * Enqueues shared inline-icon styles (editor canvas and frontend).
+ *
+ * @since 0.2.0
+ * @return void
  */
-function mosne_button_icons_block_styles() {
+function mosne_button_icons_enqueue_block_assets() {
+	$asset_path = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
+	if ( ! file_exists( $asset_path ) ) {
+		return;
+	}
 
-	wp_enqueue_block_style(
-		'core/button',
-		array(
-			'handle' => 'mosne-button-icons-block-button-styles',
-			'src'    => plugin_dir_url( __FILE__ ) . 'build/button-icons-style.css',
-			'ver'    => wp_get_theme()->get( 'Version' ),
-			'path'   => plugin_dir_path( __FILE__ ) . 'build/button-icons-style.css',
-		)
+	$asset_file = include $asset_path;
+	$style_path = plugin_dir_path( __FILE__ ) . 'build/style-index.css';
+
+	if ( ! file_exists( $style_path ) ) {
+		$style_path = plugin_dir_path( __FILE__ ) . 'build/index.css';
+	}
+
+	if ( ! file_exists( $style_path ) ) {
+		return;
+	}
+
+	$style_url = plugin_dir_url( __FILE__ ) . ( str_contains( $style_path, 'style-index.css' ) ? 'build/style-index.css' : 'build/index.css' );
+
+	wp_enqueue_style(
+		'mosne-button-icons',
+		$style_url,
+		array(),
+		$asset_file['version']
 	);
+
+	if ( is_admin() ) {
+		wp_add_inline_style( 'mosne-button-icons', mosne_button_icons_get_mask_css() );
+	}
 }
+add_action( 'enqueue_block_assets', 'mosne_button_icons_enqueue_block_assets' );
 
-add_action( 'init', 'mosne_button_icons_block_styles' );
+/**
+ * Allows inline icon attributes in post content.
+ *
+ * @since 0.2.0
+ *
+ * @param array  $tags    Allowed HTML tags.
+ * @param string $context KSES context.
+ * @return array
+ */
+function mosne_button_icons_kses_allowed_html( $tags, $context ) {
+	if ( 'post' !== $context || empty( $tags['span'] ) || ! is_array( $tags['span'] ) ) {
+		return $tags;
+	}
 
+	$tags['span']['data-icon']    = true;
+	$tags['span']['aria-hidden']  = true;
+	$tags['span']['aria-label']   = true;
 
-function mosne_button_icons_inline_css() {
-	wp_add_inline_style(
-		'mosne-button-icons-block-button-styles',
-		mosne_block_icons_generate_css(),
+	return $tags;
+}
+add_filter( 'wp_kses_allowed_html', 'mosne_button_icons_kses_allowed_html', 10, 2 );
+
+/**
+ * Replaces empty inline icon spans with SVG from the Icons API.
+ *
+ * @since 0.2.0
+ *
+ * @param string $block_content Rendered block HTML.
+ * @return string
+ */
+function mosne_button_icons_render_inline_icons( $block_content ) {
+	if ( ! mosne_button_icons_has_icons_api() || ! str_contains( $block_content, 'wp-inline-icon' ) ) {
+		return $block_content;
+	}
+
+	/*
+	 * Rich Text serializes object formats as void elements, so the saved markup
+	 * has an opening `<span>` with no closing tag. Match the opening tag only,
+	 * absorbing a closing tag when one happens to be present.
+	 */
+	$replaced = preg_replace_callback(
+		'/(<span\b(?=[^>]*\bwp-inline-icon\b)(?=[^>]*\bdata-icon=)[^>]*>)(?!\s*<svg)\s*(?:<\/span>)?/i',
+		static function ( $matches ) {
+			$open_tag = $matches[1];
+
+			$processor = new WP_HTML_Tag_Processor( $open_tag );
+			if ( ! $processor->next_tag( 'SPAN' ) ) {
+				return $matches[0];
+			}
+
+			$name = $processor->get_attribute( 'data-icon' );
+			if ( ! is_string( $name ) || ! preg_match( '/^[a-z0-9](?:[a-z0-9_-]*[a-z0-9])?\/[a-z0-9](?:[a-z0-9_-]*[a-z0-9])?$/', $name ) ) {
+				return $matches[0];
+			}
+
+			$label = $processor->get_attribute( 'aria-label' );
+			$svg   = wp_get_icon(
+				$name,
+				array(
+					'size'  => null,
+					'label' => is_string( $label ) ? $label : '',
+				)
+			);
+
+			if ( '' === $svg ) {
+				return $matches[0];
+			}
+
+			return $open_tag . $svg . '</span>';
+		},
+		$block_content
 	);
-}
 
-add_action( 'wp_enqueue_scripts', 'mosne_button_icons_inline_css' );
+	return is_string( $replaced ) ? $replaced : $block_content;
+}
+add_filter( 'render_block', 'mosne_button_icons_render_inline_icons', 10, 1 );

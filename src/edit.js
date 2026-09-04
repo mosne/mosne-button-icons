@@ -1,75 +1,126 @@
-import classnames from 'classnames';
+/**
+ * WordPress dependencies
+ */
 import { __ } from '@wordpress/i18n';
-import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
-import { applyFilters } from '@wordpress/hooks';
-import {
-	Button,
-	PanelRow,
-	PanelBody,
-	__experimentalGrid as Grid, // eslint-disable-line
-} from '@wordpress/components';
-import './editor.scss';
-export default function Edit( { attributes, setAttributes, className } ) {
-	const { icon: currentIcon } = attributes;
-	// Get the icons from the filter and set a default
-	// icon can be filtered by block name
-	const ICONS = applyFilters(
-		'mosne-button-icons.icons',
-		window.mosneButtonIcons.data ?? [],
-		'mosne/button-icons'
-	);
+import { RichTextToolbarButton } from '@wordpress/block-editor';
+import { starFilled } from '@wordpress/icons';
+import { insertObject, remove } from '@wordpress/rich-text';
+import { useState } from '@wordpress/element';
 
-	const classes = classnames( className, {
-		[ `has-icon has-icon__${ attributes?.icon }` ]: attributes?.icon,
-	} );
+/**
+ * Internal dependencies
+ */
+import { DEFAULT_ICON_STYLE, FORMAT_NAME } from './constants';
+import IconPicker from './icon-picker';
+import InlineUI from './inline-ui';
+
+/**
+ * Build format attributes for an icon object.
+ *
+ * @param {string} iconName   Namespaced icon name.
+ * @param {Object} [existing] Existing attributes when replacing.
+ * @return {Object} Format attributes.
+ */
+function getIconAttributes( iconName, existing = {} ) {
+	const label = existing.label || '';
+	const attributes = {
+		icon: iconName,
+		style: existing.style || DEFAULT_ICON_STYLE,
+	};
+
+	// A decorative icon is hidden from assistive technology instead of labelled.
+	if ( label ) {
+		attributes.label = label;
+	} else {
+		attributes.ariaHidden = 'true';
+	}
+
+	return attributes;
+}
+
+/**
+ * Rich Text format toolbar and picker.
+ *
+ * @param {Object}   props                        Component props.
+ * @param {Object}   props.value                  Rich Text value.
+ * @param {Function} props.onChange               Change handler.
+ * @param {Function} props.onFocus                Focus the editable field.
+ * @param {boolean}  props.isObjectActive         Whether the icon object is selected.
+ * @param {Object}   props.activeObjectAttributes Active object attributes.
+ * @param {Object}   props.contentRef             Editable element ref.
+ */
+export default function Edit( {
+	value,
+	onChange,
+	onFocus,
+	isObjectActive,
+	activeObjectAttributes,
+	contentRef,
+} ) {
+	const [ isPickerOpen, setPickerOpen ] = useState( false );
+
+	const applyIcon = ( iconName ) => {
+		const attributes = getIconAttributes(
+			iconName,
+			isObjectActive ? activeObjectAttributes : {}
+		);
+
+		if ( isObjectActive ) {
+			const newReplacements = value.replacements.slice();
+			newReplacements[ value.start ] = {
+				type: FORMAT_NAME,
+				attributes,
+			};
+			onChange( {
+				...value,
+				replacements: newReplacements,
+			} );
+		} else {
+			onChange(
+				insertObject( value, {
+					type: FORMAT_NAME,
+					attributes,
+				} )
+			);
+		}
+
+		onFocus();
+		setPickerOpen( false );
+	};
+
+	const removeIcon = () => {
+		onChange( remove( value, value.start, value.start + 1 ) );
+		onFocus();
+	};
 
 	return (
 		<>
-			<InspectorControls>
-				<PanelBody title={ __( 'Button Icons', 'mosne-button-icons' ) }>
-					<PanelRow>
-						<div className="mosne-button-icons__picker">
-							<Grid
-								className="block-editor-block-styles__variants"
-								columns="4"
-								gap="4"
-							>
-								{ ICONS.map( ( icon, index ) => (
-									<Button
-										key={ index }
-										label={ icon?.label }
-										title={ icon?.label }
-										style={ {
-											'--button-icon-url': `url(${ icon.url })`,
-										} }
-										isPressed={ currentIcon === icon.value }
-										className="wp-block-mosne-button-icon__inline"
-										onClick={ () =>
-											setAttributes( {
-												// Allow user to disable icons.
-												icon:
-													currentIcon === icon.value
-														? null
-														: icon.value,
-											} )
-										}
-									>
-										{ icon.icon ?? icon.value }
-									</Button>
-								) ) }
-							</Grid>
-						</div>
-					</PanelRow>
-				</PanelBody>
-			</InspectorControls>
-			<div { ...useBlockProps( { className: classes } ) }>
-				<span
-					aria-hidden={ 'true' }
-					className={ 'wp-block-mosne-button-icon__inline' }
-				>
-					{ '+' }
-				</span>
-			</div>
+			<RichTextToolbarButton
+				icon={ starFilled }
+				title={
+					isObjectActive
+						? __( 'Replace icon', 'mosne-button-icons' )
+						: __( 'Inline icon', 'mosne-button-icons' )
+				}
+				onClick={ () => setPickerOpen( true ) }
+				isActive={ isObjectActive }
+			/>
+			{ isPickerOpen && (
+				<IconPicker
+					onClose={ () => setPickerOpen( false ) }
+					value={ activeObjectAttributes?.icon }
+					onChange={ applyIcon }
+				/>
+			) }
+			{ isObjectActive && (
+				<InlineUI
+					value={ value }
+					onChange={ onChange }
+					activeObjectAttributes={ activeObjectAttributes }
+					contentRef={ contentRef }
+					onRemove={ removeIcon }
+				/>
+			) }
 		</>
 	);
 }
