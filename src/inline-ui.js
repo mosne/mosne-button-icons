@@ -2,19 +2,19 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
+import { DimensionControl } from '@wordpress/block-editor';
 import {
 	Button,
 	Flex,
 	FlexItem,
 	Popover,
-	SelectControl,
-	TextControl,
 	TextareaControl,
 } from '@wordpress/components';
 import { store as coreStore } from '@wordpress/core-data';
 import { useSelect } from '@wordpress/data';
 import { useAnchor } from '@wordpress/rich-text';
 import { useState } from '@wordpress/element';
+import { getCSSValueFromRawStyle } from '@wordpress/style-engine';
 
 /**
  * Internal dependencies
@@ -24,17 +24,50 @@ import { FORMAT_NAME } from './constants';
 const formatSettings = { name: FORMAT_NAME };
 
 /**
- * Parse width and unit from an inline style string.
+ * Parse a DimensionControl value from an inline style string.
  *
  * @param {string} style Style attribute.
- * @return {{ width: string, unit: string }} Parsed size.
+ * @return {string} Size value for DimensionControl.
  */
-function parseStyle( style ) {
-	const match = style?.match( /width:\s*([\d.]+)(px|em|rem)/i );
+function parseSizeFromStyle( style ) {
+	const match = style?.match( /width:\s*([^;]+)/i );
 	if ( ! match ) {
-		return { width: '1', unit: 'em' };
+		return '1em';
 	}
-	return { width: match[ 1 ], unit: match[ 2 ].toLowerCase() };
+
+	const cssValue = match[ 1 ].trim();
+	const presetMatch = cssValue.match(
+		/^var\(\s*--wp--preset--dimension--([^)]+)\s*\)$/i
+	);
+
+	if ( presetMatch ) {
+		return `var:preset|dimension|${ presetMatch[ 1 ] }`;
+	}
+
+	if ( cssValue === '0' || /^0(px|em|rem)?$/i.test( cssValue ) ) {
+		return '0';
+	}
+
+	return cssValue;
+}
+
+/**
+ * Build width/height inline styles from a DimensionControl value.
+ *
+ * @param {string} size DimensionControl value.
+ * @return {string} Inline style string.
+ */
+function getStyleFromSize( size ) {
+	if ( size === undefined || size === null || size === '' ) {
+		return '';
+	}
+
+	const cssSize = getCSSValueFromRawStyle( String( size ) );
+	if ( cssSize === undefined || cssSize === null || cssSize === '' ) {
+		return '';
+	}
+
+	return `width: ${ cssSize }; height: ${ cssSize };`;
 }
 
 /**
@@ -57,14 +90,10 @@ export default function InlineUI( {
 	onReplace,
 } ) {
 	const { icon, style, label = '' } = activeObjectAttributes;
-	const parsed = parseStyle( style );
-	const [ editedWidth, setEditedWidth ] = useState( parsed.width );
-	const [ editedUnit, setEditedUnit ] = useState( parsed.unit );
+	const parsedSize = parseSizeFromStyle( style );
+	const [ editedSize, setEditedSize ] = useState( parsedSize );
 	const [ editedLabel, setEditedLabel ] = useState( label );
-	const hasChanged =
-		editedWidth !== parsed.width ||
-		editedUnit !== parsed.unit ||
-		editedLabel !== label;
+	const hasChanged = editedSize !== parsedSize || editedLabel !== label;
 
 	const popoverAnchor = useAnchor( {
 		editableContentElement: contentRef.current,
@@ -91,12 +120,9 @@ export default function InlineUI( {
 				className="mosne-inline-icon__popover-form"
 				onSubmit={ ( event ) => {
 					event.preventDefault();
-					const widthValue = editedWidth
-						? `width: ${ editedWidth }${ editedUnit }; height: ${ editedWidth }${ editedUnit };`
-						: '';
 					const attributes = {
 						...activeObjectAttributes,
-						style: widthValue,
+						style: getStyleFromSize( editedSize ),
 					};
 
 					// A decorative icon is hidden from assistive technology.
@@ -140,34 +166,11 @@ export default function InlineUI( {
 							</Button>
 						</FlexItem>
 					</Flex>
-					<Flex gap={ 3 } align="flex-end">
-						<FlexItem isBlock>
-							<TextControl
-								label={ __( 'Size', 'mosne-button-icons' ) }
-								type="number"
-								value={ editedWidth }
-								min={ 0.25 }
-								step={ editedUnit === 'px' ? 1 : 0.25 }
-								onChange={ setEditedWidth }
-								__nextHasNoMarginBottom
-								__next40pxDefaultSize
-							/>
-						</FlexItem>
-						<FlexItem>
-							<SelectControl
-								label={ __( 'Unit', 'mosne-button-icons' ) }
-								value={ editedUnit }
-								options={ [
-									{ label: 'em', value: 'em' },
-									{ label: 'px', value: 'px' },
-									{ label: 'rem', value: 'rem' },
-								] }
-								onChange={ setEditedUnit }
-								__nextHasNoMarginBottom
-								__next40pxDefaultSize
-							/>
-						</FlexItem>
-					</Flex>
+					<DimensionControl
+						label={ __( 'Size', 'mosne-button-icons' ) }
+						value={ editedSize }
+						onChange={ setEditedSize }
+					/>
 					<TextareaControl
 						label={ __( 'Alternative text', 'mosne-button-icons' ) }
 						value={ editedLabel }
