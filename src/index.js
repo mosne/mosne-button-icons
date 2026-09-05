@@ -14,14 +14,15 @@ import Edit from './edit';
 
 registerFormatType( FORMAT_NAME, {
 	title: __( 'Inline icon', 'mosne-button-icons' ),
-	tagName: 'span',
+	// A void element is required: Rich Text never closes object format tags.
+	tagName: 'img',
 	className: 'wp-inline-icon',
 	object: true,
 	attributes: {
 		icon: 'data-icon',
+		src: 'src',
 		style: 'style',
-		label: 'aria-label',
-		ariaHidden: 'aria-hidden',
+		label: 'alt',
 	},
 	edit: Edit,
 } );

@@ -169,20 +169,72 @@ add_action( 'enqueue_block_assets', 'mosne_button_icons_enqueue_block_assets' );
  * @return array
  */
 function mosne_button_icons_kses_allowed_html( $tags, $context ) {
-	if ( 'post' !== $context || empty( $tags['span'] ) || ! is_array( $tags['span'] ) ) {
+	if ( 'post' !== $context ) {
 		return $tags;
 	}
 
-	$tags['span']['data-icon']    = true;
-	$tags['span']['aria-hidden']  = true;
-	$tags['span']['aria-label']   = true;
+	if ( ! empty( $tags['img'] ) && is_array( $tags['img'] ) ) {
+		$tags['img']['data-icon'] = true;
+	}
+
+	// Kept for icons saved before the format moved to a void element.
+	if ( ! empty( $tags['span'] ) && is_array( $tags['span'] ) ) {
+		$tags['span']['data-icon']   = true;
+		$tags['span']['aria-hidden'] = true;
+		$tags['span']['aria-label']  = true;
+	}
 
 	return $tags;
 }
 add_filter( 'wp_kses_allowed_html', 'mosne_button_icons_kses_allowed_html', 10, 2 );
 
 /**
- * Replaces empty inline icon spans with SVG from the Icons API.
+ * Wraps a registered icon in the inline span rendered on the front end.
+ *
+ * @since 0.2.0
+ *
+ * @param string $tag Opening tag of the icon placeholder.
+ * @return string Span wrapping the SVG, or an empty string when unavailable.
+ */
+function mosne_button_icons_render_placeholder( $tag ) {
+	$processor = new WP_HTML_Tag_Processor( $tag );
+	if ( ! $processor->next_tag() ) {
+		return '';
+	}
+
+	$name = $processor->get_attribute( 'data-icon' );
+	if ( ! is_string( $name ) || ! preg_match( '/^[a-z0-9](?:[a-z0-9_-]*[a-z0-9])?\/[a-z0-9](?:[a-z0-9_-]*[a-z0-9])?$/', $name ) ) {
+		return '';
+	}
+
+	// The alt text doubles as the accessible label; empty means decorative.
+	$label = $processor->get_attribute( 'alt' );
+	if ( ! is_string( $label ) ) {
+		$label = $processor->get_attribute( 'aria-label' );
+	}
+
+	$svg = wp_get_icon(
+		$name,
+		array(
+			'size'  => null,
+			'label' => is_string( $label ) ? $label : '',
+		)
+	);
+
+	if ( '' === $svg ) {
+		return '';
+	}
+
+	$style      = $processor->get_attribute( 'style' );
+	$style_attr = is_string( $style ) && '' !== $style
+		? sprintf( ' style="%s"', esc_attr( $style ) )
+		: '';
+
+	return sprintf( '<span class="wp-inline-icon"%s>%s</span>', $style_attr, $svg );
+}
+
+/**
+ * Replaces inline icon placeholders with SVG from the Icons API.
  *
  * @since 0.2.0
  *
@@ -194,44 +246,30 @@ function mosne_button_icons_render_inline_icons( $block_content ) {
 		return $block_content;
 	}
 
-	/*
-	 * Rich Text serializes object formats as void elements, so the saved markup
-	 * has an opening `<span>` with no closing tag. Match the opening tag only,
-	 * absorbing a closing tag when one happens to be present.
-	 */
-	$replaced = preg_replace_callback(
-		'/(<span\b(?=[^>]*\bwp-inline-icon\b)(?=[^>]*\bdata-icon=)[^>]*>)(?!\s*<svg)\s*(?:<\/span>)?/i',
-		static function ( $matches ) {
-			$open_tag = $matches[1];
-
-			$processor = new WP_HTML_Tag_Processor( $open_tag );
-			if ( ! $processor->next_tag( 'SPAN' ) ) {
-				return $matches[0];
-			}
-
-			$name = $processor->get_attribute( 'data-icon' );
-			if ( ! is_string( $name ) || ! preg_match( '/^[a-z0-9](?:[a-z0-9_-]*[a-z0-9])?\/[a-z0-9](?:[a-z0-9_-]*[a-z0-9])?$/', $name ) ) {
-				return $matches[0];
-			}
-
-			$label = $processor->get_attribute( 'aria-label' );
-			$svg   = wp_get_icon(
-				$name,
-				array(
-					'size'  => null,
-					'label' => is_string( $label ) ? $label : '',
-				)
-			);
-
-			if ( '' === $svg ) {
-				return $matches[0];
-			}
-
-			return $open_tag . $svg . '</span>';
-		},
-		$block_content
+	$patterns = array(
+		// Current markup: a void image placeholder.
+		'/<img\b(?=[^>]*\bwp-inline-icon\b)(?=[^>]*\bdata-icon=)[^>]*>/i',
+		// Icons saved before the format moved to a void element. The closing tag
+		// is optional because Rich Text never wrote one.
+		'/<span\b(?=[^>]*\bwp-inline-icon\b)(?=[^>]*\bdata-icon=)[^>]*>(?!\s*<svg)\s*(?:<\/span>)?/i',
 	);
 
-	return is_string( $replaced ) ? $replaced : $block_content;
+	foreach ( $patterns as $pattern ) {
+		$replaced = preg_replace_callback(
+			$pattern,
+			static function ( $matches ) {
+				$rendered = mosne_button_icons_render_placeholder( $matches[0] );
+
+				return '' === $rendered ? $matches[0] : $rendered;
+			},
+			$block_content
+		);
+
+		if ( is_string( $replaced ) ) {
+			$block_content = $replaced;
+		}
+	}
+
+	return $block_content;
 }
 add_filter( 'render_block', 'mosne_button_icons_render_inline_icons', 10, 1 );

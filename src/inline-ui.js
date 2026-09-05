@@ -123,16 +123,9 @@ export default function InlineUI( {
 					const attributes = {
 						...activeObjectAttributes,
 						style: getStyleFromSize( editedSize ),
+						// An empty alt marks the icon as decorative.
+						label: editedLabel,
 					};
-
-					// A decorative icon is hidden from assistive technology.
-					delete attributes.label;
-					delete attributes.ariaHidden;
-					if ( editedLabel ) {
-						attributes.label = editedLabel;
-					} else {
-						attributes.ariaHidden = 'true';
-					}
 
 					const newReplacements = value.replacements.slice();
 					newReplacements[ value.start ] = {

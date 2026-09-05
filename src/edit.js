@@ -10,7 +10,7 @@ import { useState } from '@wordpress/element';
 /**
  * Internal dependencies
  */
-import { DEFAULT_ICON_STYLE, FORMAT_NAME } from './constants';
+import { DEFAULT_ICON_STYLE, FORMAT_NAME, PLACEHOLDER_SRC } from './constants';
 import IconPicker from './icon-picker';
 import InlineUI from './inline-ui';
 
@@ -22,20 +22,13 @@ import InlineUI from './inline-ui';
  * @return {Object} Format attributes.
  */
 function getIconAttributes( iconName, existing = {} ) {
-	const label = existing.label || '';
-	const attributes = {
+	return {
 		icon: iconName,
+		src: PLACEHOLDER_SRC,
 		style: existing.style || DEFAULT_ICON_STYLE,
+		// An empty alt marks the icon as decorative.
+		label: existing.label || '',
 	};
-
-	// A decorative icon is hidden from assistive technology instead of labelled.
-	if ( label ) {
-		attributes.label = label;
-	} else {
-		attributes.ariaHidden = 'true';
-	}
-
-	return attributes;
 }
 
 /**

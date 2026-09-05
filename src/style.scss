@@ -14,13 +14,16 @@
 	}
 }
 
-.wp-inline-icon:empty {
+// In the editor the icon is a placeholder image tinted through a mask, so it
+// follows the surrounding text color. The front end gets inline SVG instead.
+img.wp-inline-icon {
 	background-color: currentcolor;
 	mask-image: var(--wp-inline-icon-mask, none);
 	mask-repeat: no-repeat;
 	mask-position: center;
 	mask-size: contain;
 }
+
 .wp-block-button__link:has(.wp-inline-icon) {
 	display: inline-flex;
 	align-items: center;
