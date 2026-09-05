@@ -20,8 +20,9 @@
 	mask-repeat: no-repeat;
 	mask-position: center;
 	mask-size: contain;
-	-webkit-mask-image: var(--wp-inline-icon-mask, none);
-	-webkit-mask-repeat: no-repeat;
-	-webkit-mask-position: center;
-	-webkit-mask-size: contain;
+}
+.wp-block-button__link:has(.wp-inline-icon) {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 }

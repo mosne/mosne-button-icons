@@ -32,52 +32,24 @@
 	}
 }
 
-.mosne-inline-icon__inserter-loading {
-	display: flex;
-	justify-content: center;
-	padding: 32px;
-}
-
-.mosne-inline-icon__inserter-no-results {
+.mosne-inline-icon__popover-form {
 	padding: 16px;
+	min-width: 260px;
 }
 
-.mosne-inline-icon__inserter-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
-	gap: 8px;
-}
-
-.mosne-inline-icon__inserter-item {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 8px;
-	height: auto;
-	padding: 12px 8px;
-}
-
-.mosne-inline-icon__inserter-item-icon {
+.mosne-inline-icon__popover-preview {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	width: 32px;
 	height: 32px;
+	flex-shrink: 0;
+	border: 1px solid #ddd;
+	border-radius: 2px;
 
 	svg {
-		width: 32px;
-		height: 32px;
+		width: 24px;
+		height: 24px;
+		fill: currentcolor;
 	}
-}
-
-.mosne-inline-icon__inserter-item-title {
-	font-size: 11px;
-	line-height: 1.3;
-	text-align: center;
-	white-space: normal;
-}
-
-.mosne-inline-icon__popover-form {
-	padding: 16px;
-	min-width: 260px;
 }

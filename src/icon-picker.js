@@ -125,7 +125,7 @@ export default function IconPicker( { onClose, value, onChange } ) {
 					{ () =>
 						! hasResolvedIcons ? (
 							<div
-								className="mosne-inline-icon__inserter-loading"
+								className="wp-block-icon__inserter-loading"
 								role="status"
 								aria-label={ __(
 									'Loading…',

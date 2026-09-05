@@ -11,6 +11,8 @@ import {
 	TextControl,
 	TextareaControl,
 } from '@wordpress/components';
+import { store as coreStore } from '@wordpress/core-data';
+import { useSelect } from '@wordpress/data';
 import { useAnchor } from '@wordpress/rich-text';
 import { useState } from '@wordpress/element';
 
@@ -36,7 +38,7 @@ function parseStyle( style ) {
 }
 
 /**
- * Popover to edit size and alternative text of an inline icon.
+ * Popover to edit the icon, size and alternative text of an inline icon.
  *
  * @param {Object}   props
  * @param {Object}   props.value                  Rich Text value.
@@ -44,6 +46,7 @@ function parseStyle( style ) {
  * @param {Object}   props.activeObjectAttributes Active object attributes.
  * @param {Object}   props.contentRef             Editable element ref.
  * @param {Function} props.onRemove               Remove the inline icon.
+ * @param {Function} props.onReplace              Reopen the icon picker.
  */
 export default function InlineUI( {
 	value,
@@ -51,8 +54,9 @@ export default function InlineUI( {
 	activeObjectAttributes,
 	contentRef,
 	onRemove,
+	onReplace,
 } ) {
-	const { style, label = '' } = activeObjectAttributes;
+	const { icon, style, label = '' } = activeObjectAttributes;
 	const parsed = parseStyle( style );
 	const [ editedWidth, setEditedWidth ] = useState( parsed.width );
 	const [ editedUnit, setEditedUnit ] = useState( parsed.unit );
@@ -66,6 +70,16 @@ export default function InlineUI( {
 		editableContentElement: contentRef.current,
 		settings: formatSettings,
 	} );
+
+	// The popover renders outside the editor canvas, so the preview cannot rely
+	// on the canvas mask styles and needs the SVG markup itself.
+	const selectedIcon = useSelect(
+		( select ) =>
+			icon
+				? select( coreStore ).getEntityRecord( 'root', 'icon', icon )
+				: null,
+		[ icon ]
+	);
 
 	return (
 		<Popover
@@ -106,6 +120,26 @@ export default function InlineUI( {
 				} }
 			>
 				<Flex direction="column" gap={ 4 }>
+					<Flex gap={ 3 } align="center">
+						<FlexItem>
+							<span
+								className="mosne-inline-icon__popover-preview"
+								aria-hidden="true"
+								dangerouslySetInnerHTML={ {
+									__html: selectedIcon?.content ?? '',
+								} }
+							/>
+						</FlexItem>
+						<FlexItem isBlock>
+							<Button
+								variant="secondary"
+								onClick={ onReplace }
+								__next40pxDefaultSize
+							>
+								{ __( 'Replace icon', 'mosne-button-icons' ) }
+							</Button>
+						</FlexItem>
+					</Flex>
 					<Flex gap={ 3 } align="flex-end">
 						<FlexItem isBlock>
 							<TextControl

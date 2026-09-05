@@ -119,6 +119,7 @@ export default function Edit( {
 					activeObjectAttributes={ activeObjectAttributes }
 					contentRef={ contentRef }
 					onRemove={ removeIcon }
+					onReplace={ () => setPickerOpen( true ) }
 				/>
 			) }
 		</>
