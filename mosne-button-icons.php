@@ -61,7 +61,16 @@ function mosne_button_icons_get_mask_css() {
 			continue;
 		}
 
-		$mask = 'url("data:image/svg+xml,' . rawurlencode( $icon['content'] ) . '")';
+		/*
+		 * The registry sanitizes icons with wp_kses(), which lowercases
+		 * attribute names. A data URI is parsed as case-sensitive XML, so
+		 * `viewbox` is ignored there: the SVG loses its aspect ratio and
+		 * `mask-size` has nothing to scale. Inline SVG is unaffected because
+		 * the HTML parser adjusts SVG attribute case on its own.
+		 */
+		$svg = preg_replace( '/\sviewbox=/i', ' viewBox=', $icon['content'] );
+
+		$mask = 'url("data:image/svg+xml,' . rawurlencode( $svg ) . '")';
 		$css .= sprintf(
 			'.wp-inline-icon[data-icon="%s"]{--wp-inline-icon-mask:%s;}',
 			esc_attr( $icon['name'] ),
