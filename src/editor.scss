@@ -1,19 +1,55 @@
-/**
- * The following styles get applied both on the front of your site
- * and in the editor.
- *
- * Replace them with your own styles or remove the file completely.
- */
+.mosne-inline-icon__inserter-modal {
 
-.wp-block-create-block-mosne-button-icons {
-	background-color: #21759b;
-	color: #fff;
-	padding: 2px;
+	.components-modal__content {
+		display: flex;
+		flex-direction: column;
+	}
 }
 
-.wp-block-create-block-mosne-button-icons-editor {
-	background-color: #21759b;
-	color: #fff;
-	padding: 2px;
+.mosne-inline-icon__inserter {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	min-height: 0;
+	flex: 1;
 }
 
+.mosne-inline-icon__inserter-tabs {
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	flex: 1;
+
+	.components-tab-panel__tabs {
+		flex-shrink: 0;
+	}
+
+	.components-tab-panel__tab-content {
+		min-height: 0;
+		flex: 1;
+		overflow: auto;
+		padding-top: 16px;
+	}
+}
+
+.mosne-inline-icon__popover-form {
+	padding: 16px;
+	min-width: 260px;
+}
+
+.mosne-inline-icon__popover-preview {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	flex-shrink: 0;
+	border: 1px solid #ddd;
+	border-radius: 2px;
+
+	svg {
+		width: 24px;
+		height: 24px;
+		fill: currentcolor;
+	}
+}

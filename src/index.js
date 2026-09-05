@@ -1,35 +1,28 @@
 /**
- * Registers a new block provided a unique name and an object defining its behavior.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
+ * WordPress dependencies
  */
-import { registerBlockType } from '@wordpress/blocks';
-import { addCard } from '@wordpress/icons';
-
-/**
- * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
- * All files containing `style` keyword are bundled together. The code used
- * gets applied both to the front of your site and to the editor.
- *
- * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
- */
-import './style.scss';
+import { __ } from '@wordpress/i18n';
+import { registerFormatType } from '@wordpress/rich-text';
 
 /**
  * Internal dependencies
  */
+import './style.scss';
+import './editor.scss';
+import { FORMAT_NAME } from './constants';
 import Edit from './edit';
-import save from './save';
-import metadata from './block.json';
 
-/**
- * Every block starts by registering a new block type definition.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
- */
-registerBlockType( metadata.name, {
-	...metadata,
-	icon: addCard,
+registerFormatType( FORMAT_NAME, {
+	title: __( 'Inline icon', 'mosne-button-icons' ),
+	// A void element is required: Rich Text never closes object format tags.
+	tagName: 'img',
+	className: 'wp-inline-icon',
+	object: true,
+	attributes: {
+		icon: 'data-icon',
+		src: 'src',
+		style: 'style',
+		label: 'alt',
+	},
 	edit: Edit,
-	save,
 } );
