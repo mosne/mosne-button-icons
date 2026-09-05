@@ -43,7 +43,79 @@ function mosne_button_icons_has_icons_api() {
 }
 
 /**
- * Builds CSS mask rules so empty inline icon spans preview in the editor.
+ * Registers the Phosphor icon collection and its SVG files.
+ *
+ * @since 0.2.0
+ * @return void
+ */
+function mosne_button_icons_register_phosphor_icons() {
+	if (
+		! function_exists( 'wp_register_icon_collection' )
+		|| ! function_exists( 'wp_register_icon' )
+	) {
+		return;
+	}
+
+	$collection = 'phosphor';
+	$directory  = plugin_dir_path( __FILE__ ) . 'phosphor-icons/';
+	$icon_files = glob( $directory . '*.svg' );
+
+	if ( false === $icon_files ) {
+		return;
+	}
+
+	wp_register_icon_collection(
+		$collection,
+		array(
+			'label'       => __( 'Phosphor Icons', 'mosne-button-icons' ),
+			'description' => __( 'A flexible icon family for interfaces, diagrams, and presentations.', 'mosne-button-icons' ),
+		)
+	);
+
+	foreach ( $icon_files as $icon_file ) {
+		$icon_slug  = basename( $icon_file, '.svg' );
+		$icon_label = ucwords( str_replace( array( '-', '_' ), ' ', $icon_slug ) );
+
+		wp_register_icon(
+			$collection . '/' . $icon_slug,
+			array(
+				'label'     => $icon_label,
+				'file_path' => $icon_file,
+			)
+		);
+	}
+}
+add_action( 'init', 'mosne_button_icons_register_phosphor_icons', 1 );
+
+/**
+ * Converts a registered icon file path into a public URL.
+ *
+ * Icons may be registered from a file or from inline markup, and the Icons API
+ * only exposes the filesystem path. Paths stored outside the site root cannot be
+ * served, so callers need to fall back to inline markup.
+ *
+ * @since 0.2.0
+ *
+ * @param string $file_path Absolute path to an icon file.
+ * @return string Public URL, or an empty string when the file is not served.
+ */
+function mosne_button_icons_get_icon_url( $file_path ) {
+	$root = wp_normalize_path( untrailingslashit( ABSPATH ) );
+	$path = wp_normalize_path( (string) $file_path );
+
+	if ( ! str_starts_with( $path, $root . '/' ) || ! str_ends_with( $path, '.svg' ) ) {
+		return '';
+	}
+
+	return site_url( substr( $path, strlen( $root ) ) );
+}
+
+/**
+ * Builds the CSS mask rules that preview inline icons in the editor.
+ *
+ * Icons served from a file are referenced by URL so the browser only downloads
+ * the ones actually displayed, instead of parsing every registered icon inlined
+ * as a data URI.
  *
  * @since 0.2.0
  * @return string
@@ -57,20 +129,29 @@ function mosne_button_icons_get_mask_css() {
 	$css   = '';
 
 	foreach ( $icons as $icon ) {
-		if ( empty( $icon['name'] ) || empty( $icon['content'] ) ) {
+		if ( empty( $icon['name'] ) ) {
 			continue;
 		}
 
-		/*
-		 * The registry sanitizes icons with wp_kses(), which lowercases
-		 * attribute names. A data URI is parsed as case-sensitive XML, so
-		 * `viewbox` is ignored there: the SVG loses its aspect ratio and
-		 * `mask-size` has nothing to scale. Inline SVG is unaffected because
-		 * the HTML parser adjusts SVG attribute case on its own.
-		 */
-		$svg = preg_replace( '/\sviewbox=/i', ' viewBox=', $icon['content'] );
+		$url = empty( $icon['file_path'] )
+			? ''
+			: mosne_button_icons_get_icon_url( $icon['file_path'] );
 
-		$mask = 'url("data:image/svg+xml,' . rawurlencode( $svg ) . '")';
+		if ( '' !== $url ) {
+			$mask = sprintf( 'url("%s")', esc_url( $url ) );
+		} elseif ( ! empty( $icon['content'] ) ) {
+			/*
+			 * Inline markup is sanitized by the registry with wp_kses(), which
+			 * lowercases attribute names. A data URI is parsed as case-sensitive
+			 * XML, so `viewbox` is ignored there: the SVG loses its aspect ratio
+			 * and `mask-size` has nothing to scale.
+			 */
+			$svg  = preg_replace( '/\sviewbox=/i', ' viewBox=', $icon['content'] );
+			$mask = 'url("data:image/svg+xml,' . rawurlencode( $svg ) . '")';
+		} else {
+			continue;
+		}
+
 		$css .= sprintf(
 			'.wp-inline-icon[data-icon="%s"]{--wp-inline-icon-mask:%s;}',
 			esc_attr( $icon['name'] ),

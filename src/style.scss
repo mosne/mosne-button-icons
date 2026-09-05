@@ -28,4 +28,5 @@ img.wp-inline-icon {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	gap: var(--wp-block-button-icon-gap, .5em);
 }
