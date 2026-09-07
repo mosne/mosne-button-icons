@@ -1,14 +1,17 @@
 <?php
 /**
  * Plugin Name:       Mosne Button Icons
+ * Plugin URI:        https://github.com/mosne/mosne-button-icons
  * Description:       Insert WordPress icons inline in Rich Text, the same way as inline images.
  * Requires at least: 7.1
  * Requires PHP:      7.2
  * Version:           0.2.0
- * Author:            The WordPress Contributors
+ * Author:            Mosne
+ * Author URI:        https://mosne.it
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       mosne-button-icons
+ * Domain Path:       /languages
  *
  * @package MosneButtonIcons
  */
@@ -17,20 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * Loads the plugin text domain.
- *
- * @since 0.2.0
- * @return void
- */
-function mosne_button_icons_load_textdomain() {
-	load_plugin_textdomain(
-		'mosne-button-icons',
-		false,
-		dirname( plugin_basename( __FILE__ ) ) . '/languages'
-	);
-}
-add_action( 'init', 'mosne_button_icons_load_textdomain', 0 );
+define( 'MOSNE_BUTTON_ICONS_VERSION', '0.2.0' );
+define( 'MOSNE_BUTTON_ICONS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'MOSNE_BUTTON_ICONS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 /**
  * Returns whether the Icons API is available.
@@ -85,7 +77,7 @@ function mosne_button_icons_register_phosphor_icons() {
 		);
 	}
 }
-add_action( 'init', 'mosne_button_icons_register_phosphor_icons', 1 );
+add_action( 'init', 'mosne_button_icons_register_phosphor_icons', 1, 0 );
 
 /**
  * Converts a registered icon file path into a public URL.
@@ -101,9 +93,9 @@ add_action( 'init', 'mosne_button_icons_register_phosphor_icons', 1 );
  */
 function mosne_button_icons_get_icon_url( $file_path ) {
 	$root = wp_normalize_path( untrailingslashit( ABSPATH ) );
-	$path = wp_normalize_path( (string) $file_path );
+	$path = wp_normalize_path( $file_path );
 
-	if ( ! str_starts_with( $path, $root . '/' ) || ! str_ends_with( $path, '.svg' ) ) {
+	if ( 0 !== strpos( $path, $root . '/' ) || '.svg' !== substr( $path, -4 ) ) {
 		return '';
 	}
 
@@ -129,17 +121,17 @@ function mosne_button_icons_get_mask_css() {
 	$css   = '';
 
 	foreach ( $icons as $icon ) {
-		if ( empty( $icon['name'] ) ) {
+		if ( ! isset( $icon['name'] ) || '' === $icon['name'] ) {
 			continue;
 		}
 
-		$url = empty( $icon['file_path'] )
+		$url = ( ! isset( $icon['file_path'] ) || '' === $icon['file_path'] )
 			? ''
 			: mosne_button_icons_get_icon_url( $icon['file_path'] );
 
 		if ( '' !== $url ) {
 			$mask = sprintf( 'url("%s")', esc_url( $url ) );
-		} elseif ( ! empty( $icon['content'] ) ) {
+		} elseif ( isset( $icon['content'] ) && '' !== $icon['content'] ) {
 			/*
 			 * Inline markup is sanitized by the registry with wp_kses(), which
 			 * lowercases attribute names. A data URI is parsed as case-sensitive
@@ -174,6 +166,7 @@ function mosne_button_icons_enqueue_editor_assets() {
 		return;
 	}
 
+	/** @var array{dependencies: list<string>, version: string} $asset_file */
 	$asset_file = include $asset_path;
 
 	wp_enqueue_script(
@@ -200,7 +193,7 @@ function mosne_button_icons_enqueue_editor_assets() {
 		);
 	}
 }
-add_action( 'enqueue_block_editor_assets', 'mosne_button_icons_enqueue_editor_assets' );
+add_action( 'enqueue_block_editor_assets', 'mosne_button_icons_enqueue_editor_assets', 10, 0 );
 
 /**
  * Enqueues shared inline-icon styles (editor canvas and frontend).
@@ -214,6 +207,7 @@ function mosne_button_icons_enqueue_block_assets() {
 		return;
 	}
 
+	/** @var array{dependencies: list<string>, version: string} $asset_file */
 	$asset_file = include $asset_path;
 	$style_path = plugin_dir_path( __FILE__ ) . 'build/style-index.css';
 
@@ -225,7 +219,7 @@ function mosne_button_icons_enqueue_block_assets() {
 		return;
 	}
 
-	$style_url = plugin_dir_url( __FILE__ ) . ( str_contains( $style_path, 'style-index.css' ) ? 'build/style-index.css' : 'build/index.css' );
+	$style_url = plugin_dir_url( __FILE__ ) . ( false !== strpos( $style_path, 'style-index.css' ) ? 'build/style-index.css' : 'build/index.css' );
 
 	wp_enqueue_style(
 		'mosne-button-icons',
@@ -238,7 +232,7 @@ function mosne_button_icons_enqueue_block_assets() {
 		wp_add_inline_style( 'mosne-button-icons', mosne_button_icons_get_mask_css() );
 	}
 }
-add_action( 'enqueue_block_assets', 'mosne_button_icons_enqueue_block_assets' );
+add_action( 'enqueue_block_assets', 'mosne_button_icons_enqueue_block_assets', 10, 0 );
 
 /**
  * Allows inline icon attributes in post content.
@@ -254,12 +248,12 @@ function mosne_button_icons_kses_allowed_html( $tags, $context ) {
 		return $tags;
 	}
 
-	if ( ! empty( $tags['img'] ) && is_array( $tags['img'] ) ) {
+	if ( isset( $tags['img'] ) && is_array( $tags['img'] ) ) {
 		$tags['img']['data-icon'] = true;
 	}
 
 	// Kept for icons saved before the format moved to a void element.
-	if ( ! empty( $tags['span'] ) && is_array( $tags['span'] ) ) {
+	if ( isset( $tags['span'] ) && is_array( $tags['span'] ) ) {
 		$tags['span']['data-icon']   = true;
 		$tags['span']['aria-hidden'] = true;
 		$tags['span']['aria-label']  = true;
@@ -323,7 +317,7 @@ function mosne_button_icons_render_placeholder( $tag ) {
  * @return string
  */
 function mosne_button_icons_render_inline_icons( $block_content ) {
-	if ( ! mosne_button_icons_has_icons_api() || ! str_contains( $block_content, 'wp-inline-icon' ) ) {
+	if ( ! mosne_button_icons_has_icons_api() || false === strpos( $block_content, 'wp-inline-icon' ) ) {
 		return $block_content;
 	}
 

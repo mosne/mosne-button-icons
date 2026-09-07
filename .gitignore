@@ -11,8 +11,12 @@ coverage
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/
 
+# Generated Phosphor SVG icons (copied from @phosphor-icons/core via npm run copy-icons)
+phosphor-icons/
+
 # Dependency directories
 node_modules/
+vendor/
 
 # Optional npm cache directory
 .npm
@@ -28,3 +32,11 @@ node_modules/
 
 # dotenv environment variables file
 .env
+
+# IDE
+.idea/
+.vscode/
+
+# Keep lockfiles tracked for reproducible CI (overrides global ignore).
+!package-lock.json
+!composer.lock

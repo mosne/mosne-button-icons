@@ -1,6 +1,6 @@
 === Mosne Button Icons ===
-Contributors:      The WordPress Contributors
-Tags:              icons, rich-text, button, block-editor
+Contributors:      mosne
+Tags:              icons, rich-text, button, block-editor, phosphor
 Requires at least: 7.1
 Tested up to:      7.1
 Requires PHP:      7.2
@@ -18,11 +18,46 @@ Icons come from the WordPress Icons API (the same library as the `core/icon` blo
 
 The format stores an icon name. On the front end, WordPress renders the SVG with `wp_get_icon()` so the icon inherits the surrounding text color.
 
+= Features =
+
+* Inline icon Rich Text format in the block editor toolbar
+* Works in paragraphs, headings, buttons, and other Rich Text fields
+* Uses the WordPress Icons API (`wp_get_icon`, `wp_register_icon`)
+* Ships with a Phosphor icon collection
+* Front-end SVG rendering that inherits text color
+* Accessible labels via alt / aria-label (empty means decorative)
+
 == Installation ==
 
 1. Upload the plugin files to the `/wp-content/plugins/mosne-button-icons` directory, or install the plugin through the WordPress plugins screen.
 1. Activate the plugin through the 'Plugins' screen in WordPress.
 1. In the block editor, place the cursor in Rich Text and choose Inline icon from the format toolbar.
+
+== Frequently Asked Questions ==
+
+= Which WordPress version do I need? =
+
+WordPress 7.1 or later is required because the plugin relies on the Icons API.
+
+= Can I use icons from other collections? =
+
+Yes. Any collection registered with `wp_register_icon()` / `wp_register_icon_collection()` is available in the picker.
+
+= How do icons look on the front end? =
+
+Placeholders are replaced with SVG markup from `wp_get_icon()`, so icons inherit the surrounding text color.
+
+== Screenshots ==
+
+1. Inline icon format in the Rich Text toolbar (add screenshot-1.png to .wordpress-org/)
+2. Icon picker with Phosphor collection (add screenshot-2.png to .wordpress-org/)
+3. Inline icons rendered in a button on the front end (add screenshot-3.png to .wordpress-org/)
+
+== Credits ==
+
+This plugin ships SVG icons from [Phosphor Icons](https://phosphoricons.com), distributed via the [`@phosphor-icons/core`](https://www.npmjs.com/package/@phosphor-icons/core) package.
+
+Phosphor Icons is licensed under the [MIT License](https://opensource.org/licenses/MIT). Copyright (c) 2023 Phosphor Icons.
 
 == Changelog ==
 

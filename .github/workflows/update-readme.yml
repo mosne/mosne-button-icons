@@ -1,0 +1,30 @@
+name: "Update Readme and Assets on WordPress.org"
+
+on:
+  workflow_dispatch:
+jobs:
+  update-readme:
+    name: "Update readme.txt and assets on WordPress.org"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - id: set-vars
+        name: "Set variables from .plugin-data file"
+        run: |
+          VERSION=$(jq -r '.version' .plugin-data)
+          SLUG=$(jq -r '.slug' .plugin-data)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
+
+      - id: deploy
+        name: "WordPress.org plugin asset/readme update"
+        uses: 10up/action-wordpress-plugin-asset-update@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: ${{ steps.set-vars.outputs.slug }}
+          IGNORE_OTHER_FILES: true

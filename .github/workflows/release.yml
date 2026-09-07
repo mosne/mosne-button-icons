@@ -1,0 +1,73 @@
+name: Release new TAG
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-release:
+    name: "Release new TAG"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - id: set-vars
+        name: "Set variable from .plugin-data file"
+        run: |
+          VERSION=$(jq -r '.version' .plugin-data)
+          SLUG=$(jq -r '.slug' .plugin-data)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
+
+      - id: check-version
+        name: "Check version does not exist"
+        run: |
+          VERSION=${{ steps.set-vars.outputs.version }}
+
+          echo "Get Branch tag"
+          if git rev-parse "$VERSION" >/dev/null 2>&1; then
+            echo "Tag already exists, stop now";
+            exit 1;
+          fi
+
+      - id: build-js
+        name: "Build project JS"
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+
+      - id: build-php
+        name: "Build project PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - run: composer install --prefer-dist --no-dev -o
+
+      - id: commit-and-push
+        name: "Commit and push new TAG"
+        run: |
+          VERSION=${{ steps.set-vars.outputs.version }}
+
+          echo "Copy .distignore to .gitignore"
+          cp .distignore .gitignore
+
+          echo "Configure git"
+          git config --local user.email "$(git log --format='%ae' HEAD^!)"
+          git config --local user.name "$(git log --format='%an' HEAD^!)"
+
+          echo "Creating branch"
+          git checkout -b release/${VERSION}
+
+          echo "Creating tag ${VERSION}"
+          git add .
+          git add -u
+          git commit -m "Release version ${VERSION}"
+          git tag ${VERSION}
+          git push --tags

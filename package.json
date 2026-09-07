@@ -2,9 +2,12 @@
 	"name": "mosne-button-icons",
 	"version": "0.2.0",
 	"description": "Insert WordPress icons inline in Rich Text, the same way as inline images.",
-	"author": "The WordPress Contributors",
+	"author": "mosne",
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
+	"engines": {
+		"node": ">=20"
+	},
 	"scripts": {
 		"build": "wp-scripts build",
 		"format": "wp-scripts format",
@@ -12,9 +15,35 @@
 		"lint:js": "wp-scripts lint-js",
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
-		"start": "wp-scripts start"
+		"start": "wp-scripts start",
+		"make-pot": "wp i18n make-pot . languages/mosne-button-icons.pot --slug=mosne-button-icons --domain=mosne-button-icons --exclude=node_modules,src,vendor,build",
+		"make-json": "wp i18n make-json languages/ --no-purge",
+		"check": "node check_versions.js",
+		"copy-icons": "node copy_phosphor_icons.js",
+		"postinstall": "npm run copy-icons",
+		"version": "node bump_version.js",
+		"version:patch": "node bump_version.js patch",
+		"version:minor": "node bump_version.js minor",
+		"version:major": "node bump_version.js major"
 	},
+	"keywords": [
+		"wordpress",
+		"plugin",
+		"icons",
+		"rich-text",
+		"button",
+		"block-editor"
+	],
+	"files": [
+		"build",
+		"phosphor-icons",
+		"languages",
+		"mosne-button-icons.php",
+		"readme.txt",
+		"LICENSE"
+	],
 	"devDependencies": {
+		"@phosphor-icons/core": "^2.1.1",
 		"@wordpress/block-editor": "^17.0.0",
 		"@wordpress/components": "^40.0.0",
 		"@wordpress/compose": "^8.7.0",
