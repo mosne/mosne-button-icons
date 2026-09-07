@@ -8,7 +8,7 @@ import {
 	Flex,
 	FlexItem,
 	Popover,
-	TextareaControl,
+	TextControl,
 } from '@wordpress/components';
 import { store as coreStore } from '@wordpress/core-data';
 import { useSelect } from '@wordpress/data';
@@ -164,7 +164,7 @@ export default function InlineUI( {
 						value={ editedSize }
 						onChange={ setEditedSize }
 					/>
-					<TextareaControl
+					<TextControl
 						label={ __( 'Alternative text', 'mosne-button-icons' ) }
 						value={ editedLabel }
 						onChange={ setEditedLabel }
@@ -173,6 +173,7 @@ export default function InlineUI( {
 							'mosne-button-icons'
 						) }
 						__nextHasNoMarginBottom
+						__next40pxDefaultSize
 					/>
 					<Flex justify="space-between">
 						<Button
