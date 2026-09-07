@@ -22,6 +22,7 @@ img.wp-inline-icon {
 	mask-repeat: no-repeat;
 	mask-position: center;
 	mask-size: contain;
+	pointer-events: initial !important;
 }
 
 .wp-block-button__link:has(.wp-inline-icon) {
