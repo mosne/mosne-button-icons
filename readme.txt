@@ -4,7 +4,7 @@ Tags:              icons, rich-text, button, block-editor, phosphor
 Requires at least: 7.1
 Tested up to:      7.1
 Requires PHP:      7.2
-Stable tag:        0.2.0
+Stable tag:        0.2.1
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ Insert WordPress icons inline in Rich Text, the same way as inline images.
 
 Adds an **Inline icon** format to the block editor toolbar. It works anywhere Rich Text allows formats (paragraphs, headings, buttons, lists, and more).
 
-Icons come from the WordPress Icons API (the same library as the `core/icon` block), including collections registered by themes and plugins via `wp_register_icon()`.
+Icons come from the WordPress Icons API (the same library as the `core/icon` block), including collections registered by themes and plugins via `wp_register_icon()`. An optional Phosphor icon collection ships with the plugin and can be disabled from Settings or via a filter.
 
 The format stores an icon name. On the front end, WordPress renders the SVG with `wp_get_icon()` so the icon inherits the surrounding text color.
 
@@ -23,7 +23,7 @@ The format stores an icon name. On the front end, WordPress renders the SVG with
 * Inline icon Rich Text format in the block editor toolbar
 * Works in paragraphs, headings, buttons, and other Rich Text fields
 * Uses the WordPress Icons API (`wp_get_icon`, `wp_register_icon`)
-* Ships with a Phosphor icon collection under icon-collections/
+* Optional Phosphor icon collection under icon-collections/ (enabled by default)
 * Toggle built-in collections via Settings or a filter
 * Front-end SVG rendering that inherits text color
 * Accessible labels via alt / aria-label (empty means decorative)
@@ -65,6 +65,11 @@ This plugin ships SVG icons from [Phosphor Icons](https://phosphoricons.com), di
 Phosphor Icons is licensed under the [MIT License](https://opensource.org/licenses/MIT). Copyright (c) 2023 Phosphor Icons.
 
 == Changelog ==
+
+= 0.2.1 =
+* Move Phosphor icons under icon-collections/ for multiple collections.
+* Add Settings page and mosne_button_icons_collection_enabled filter to disable collections.
+* Cache icon file lists with a transient to avoid repeated filesystem scans.
 
 = 0.2.0 =
 * Replace custom SVG attributes with a global Rich Text format backed by the Icons API.

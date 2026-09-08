@@ -157,21 +157,30 @@ function mosne_button_icons_sanitize_disabled_collections( $value ) {
 	$available = array_keys( mosne_button_icons_get_available_collections() );
 	$enabled   = array();
 
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Settings API verifies the nonce.
-	if ( isset( $_POST['mosne_button_icons_enabled_collections'] ) && is_array( $_POST['mosne_button_icons_enabled_collections'] ) ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Settings API verifies the nonce.
-		$raw_enabled = wp_unslash( $_POST['mosne_button_icons_enabled_collections'] );
+	/*
+	 * Settings API verifies the options.php nonce before calling sanitize_callback.
+	 * Enabled checkboxes use a different field name than the stored option.
+	 */
+	// phpcs:disable WordPress.Security.NonceVerification.Missing
+	if ( isset( $_POST['mosne_button_icons_enabled_collections'] ) ) {
+		$raw_enabled = map_deep(
+			// Sanitized immediately via map_deep( ..., 'sanitize_key' ).
+			wp_unslash( $_POST['mosne_button_icons_enabled_collections'] ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			'sanitize_key'
+		);
 
-		foreach ( $raw_enabled as $slug ) {
-			if ( ! is_string( $slug ) ) {
-				continue;
-			}
-			$clean = sanitize_key( $slug );
-			if ( '' !== $clean && in_array( $clean, $available, true ) ) {
-				$enabled[] = $clean;
+		if ( is_array( $raw_enabled ) ) {
+			foreach ( $raw_enabled as $slug ) {
+				if ( ! is_string( $slug ) || '' === $slug ) {
+					continue;
+				}
+				if ( in_array( $slug, $available, true ) ) {
+					$enabled[] = $slug;
+				}
 			}
 		}
 	}
+	// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 	$disabled = array_values( array_diff( $available, $enabled ) );
 

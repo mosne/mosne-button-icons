@@ -1,0 +1,70 @@
+# Copyright (C) 2026 Mosne
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Mosne Button Icons 0.2.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/mosne-button-icons\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-09-08T20:55:50+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: mosne-button-icons\n"
+
+#. Plugin Name of the plugin
+#: includes/settings.php:56
+#: includes/settings.php:57
+msgid "Mosne Button Icons"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://github.com/mosne/mosne-button-icons"
+msgstr ""
+
+#. Description of the plugin
+msgid "Insert WordPress icons inline in Rich Text, the same way as inline images."
+msgstr ""
+
+#. Author of the plugin
+msgid "Mosne"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://mosne.it"
+msgstr ""
+
+#: includes/collections.php:49
+msgid "Phosphor Icons"
+msgstr ""
+
+#: includes/collections.php:50
+msgid "A flexible icon family for interfaces, diagrams, and presentations."
+msgstr ""
+
+#: includes/settings.php:24
+msgid "Disabled icon collection slugs."
+msgstr ""
+
+#: includes/settings.php:33
+msgid "Icon collections"
+msgstr ""
+
+#: includes/settings.php:40
+#: includes/settings.php:117
+msgid "Enabled collections"
+msgstr ""
+
+#: includes/settings.php:96
+msgid "Choose which built-in icon collections are available in the editor. All collections are enabled by default."
+msgstr ""
+
+#: includes/settings.php:112
+msgid "No icon collections found. Run npm run copy-icons during development, or reinstall the plugin package."
+msgstr ""
+
+#: includes/settings.php:220
+msgid "Settings"
+msgstr ""

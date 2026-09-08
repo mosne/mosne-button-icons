@@ -5,7 +5,7 @@
  * Description:       Insert WordPress icons inline in Rich Text, the same way as inline images.
  * Requires at least: 7.1
  * Requires PHP:      7.2
- * Version:           0.2.0
+ * Version:           0.2.1
  * Author:            Mosne
  * Author URI:        https://mosne.it
  * License:           GPL-2.0-or-later
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MOSNE_BUTTON_ICONS_VERSION', '0.2.0' );
+define( 'MOSNE_BUTTON_ICONS_VERSION', '0.2.1' );
 define( 'MOSNE_BUTTON_ICONS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MOSNE_BUTTON_ICONS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
