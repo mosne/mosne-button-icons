@@ -15,7 +15,8 @@ The format stores an icon name. On the front end, WordPress renders the SVG with
 * Inline icon Rich Text format in the block editor toolbar
 * Works in paragraphs, headings, buttons, and other Rich Text fields
 * Uses the WordPress Icons API (`wp_get_icon`, `wp_register_icon`)
-* Ships with a Phosphor icon collection
+* Ships with a Phosphor icon collection under `icon-collections/`
+* Toggle built-in collections via Settings or the `mosne_button_icons_collection_enabled` filter
 * Front-end SVG rendering that inherits text color
 * Accessible labels via alt / aria-label (empty means decorative)
 
@@ -42,12 +43,30 @@ composer install
 composer cs        # PHPCS / WPCS
 ```
 
-`npm install` copies the Phosphor **regular** SVGs from `@phosphor-icons/core` into `phosphor-icons/` (gitignored, included in releases). To refresh icons after bumping the package:
+`npm install` copies the Phosphor **regular** SVGs from `@phosphor-icons/core` into `icon-collections/phosphor/` (gitignored, included in releases). Additional collections can be added as sibling folders under `icon-collections/`. To refresh Phosphor icons after bumping the package:
 
 ```bash
 npm update @phosphor-icons/core
 npm run copy-icons
 ```
+
+Disable a collection from PHP:
+
+```php
+add_filter(
+	'mosne_button_icons_collection_enabled',
+	static function ( $enabled, $slug ) {
+		if ( 'phosphor' === $slug ) {
+			return false;
+		}
+		return $enabled;
+	},
+	10,
+	2
+);
+```
+
+Or use **Settings → Mosne Button Icons** to toggle collections with checkboxes (all enabled by default).
 
 Version bump (keeps `.plugin-data`, `readme.txt`, PHP header/constant, and `package.json` in sync):
 

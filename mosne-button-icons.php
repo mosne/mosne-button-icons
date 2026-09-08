@@ -24,6 +24,12 @@ define( 'MOSNE_BUTTON_ICONS_VERSION', '0.2.0' );
 define( 'MOSNE_BUTTON_ICONS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MOSNE_BUTTON_ICONS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
+require_once MOSNE_BUTTON_ICONS_PLUGIN_DIR . 'includes/collections.php';
+
+if ( is_admin() ) {
+	require_once MOSNE_BUTTON_ICONS_PLUGIN_DIR . 'includes/settings.php';
+}
+
 /**
  * Returns whether the Icons API is available.
  *
@@ -33,51 +39,6 @@ define( 'MOSNE_BUTTON_ICONS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 function mosne_button_icons_has_icons_api() {
 	return function_exists( 'wp_get_icon' ) && class_exists( 'WP_Icons_Registry' );
 }
-
-/**
- * Registers the Phosphor icon collection and its SVG files.
- *
- * @since 0.2.0
- * @return void
- */
-function mosne_button_icons_register_phosphor_icons() {
-	if (
-		! function_exists( 'wp_register_icon_collection' )
-		|| ! function_exists( 'wp_register_icon' )
-	) {
-		return;
-	}
-
-	$collection = 'phosphor';
-	$directory  = plugin_dir_path( __FILE__ ) . 'phosphor-icons/';
-	$icon_files = glob( $directory . '*.svg' );
-
-	if ( false === $icon_files ) {
-		return;
-	}
-
-	wp_register_icon_collection(
-		$collection,
-		array(
-			'label'       => __( 'Phosphor Icons', 'mosne-button-icons' ),
-			'description' => __( 'A flexible icon family for interfaces, diagrams, and presentations.', 'mosne-button-icons' ),
-		)
-	);
-
-	foreach ( $icon_files as $icon_file ) {
-		$icon_slug  = basename( $icon_file, '.svg' );
-		$icon_label = ucwords( str_replace( array( '-', '_' ), ' ', $icon_slug ) );
-
-		wp_register_icon(
-			$collection . '/' . $icon_slug,
-			array(
-				'label'     => $icon_label,
-				'file_path' => $icon_file,
-			)
-		);
-	}
-}
-add_action( 'init', 'mosne_button_icons_register_phosphor_icons', 1, 0 );
 
 /**
  * Converts a registered icon file path into a public URL.

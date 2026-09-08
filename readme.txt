@@ -12,7 +12,7 @@ Insert WordPress icons inline in Rich Text, the same way as inline images.
 
 == Description ==
 
-Adds an **Inline icon** format to the block editor toolbar. It works anywhere Rich Text allows formats (paragraphs, headings, buttons, and more).
+Adds an **Inline icon** format to the block editor toolbar. It works anywhere Rich Text allows formats (paragraphs, headings, buttons, lists, and more).
 
 Icons come from the WordPress Icons API (the same library as the `core/icon` block), including collections registered by themes and plugins via `wp_register_icon()`.
 
@@ -23,7 +23,8 @@ The format stores an icon name. On the front end, WordPress renders the SVG with
 * Inline icon Rich Text format in the block editor toolbar
 * Works in paragraphs, headings, buttons, and other Rich Text fields
 * Uses the WordPress Icons API (`wp_get_icon`, `wp_register_icon`)
-* Ships with a Phosphor icon collection
+* Ships with a Phosphor icon collection under icon-collections/
+* Toggle built-in collections via Settings or a filter
 * Front-end SVG rendering that inherits text color
 * Accessible labels via alt / aria-label (empty means decorative)
 
@@ -42,6 +43,10 @@ WordPress 7.1 or later is required because the plugin relies on the Icons API.
 = Can I use icons from other collections? =
 
 Yes. Any collection registered with `wp_register_icon()` / `wp_register_icon_collection()` is available in the picker.
+
+= How do I disable a built-in collection? =
+
+Go to Settings → Mosne Button Icons and uncheck the collection, or use the `mosne_button_icons_collection_enabled` filter in code. Collections are enabled by default.
 
 = How do icons look on the front end? =
 

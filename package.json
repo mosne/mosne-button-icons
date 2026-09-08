@@ -36,7 +36,8 @@
 	],
 	"files": [
 		"build",
-		"phosphor-icons",
+		"icon-collections",
+		"includes",
 		"languages",
 		"mosne-button-icons.php",
 		"readme.txt",

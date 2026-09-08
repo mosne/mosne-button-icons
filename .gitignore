@@ -12,7 +12,7 @@ coverage
 build/
 
 # Generated Phosphor SVG icons (copied from @phosphor-icons/core via npm run copy-icons)
-phosphor-icons/
+icon-collections/phosphor/
 
 # Dependency directories
 node_modules/

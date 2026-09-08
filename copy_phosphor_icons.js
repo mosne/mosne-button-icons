@@ -10,10 +10,10 @@ const SOURCE_DIR = path.join(
 	'assets',
 	'regular'
 );
-const DEST_DIR = path.join( __dirname, 'phosphor-icons' );
+const DEST_DIR = path.join( __dirname, 'icon-collections', 'phosphor' );
 
 /**
- * Copies regular-weight SVGs from @phosphor-icons/core into phosphor-icons/,
+ * Copies regular-weight SVGs from @phosphor-icons/core into icon-collections/phosphor/,
  * stripping the "-regular" filename suffix so icon slugs stay stable.
  *
  * @return {void}
@@ -57,7 +57,7 @@ function copyPhosphorIcons() {
 	}
 
 	console.log(
-		`✓ Copied ${ copied } Phosphor regular icons to phosphor-icons/`
+		`✓ Copied ${ copied } Phosphor regular icons to icon-collections/phosphor/`
 	);
 }
 
