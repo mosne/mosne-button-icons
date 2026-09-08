@@ -37,23 +37,19 @@
 	},
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-		"humanmade/psalm-plugin-wordpress": "^3.0",
 		"overtrue/phplint": "^3.4",
 		"php-parallel-lint/php-parallel-lint": "^1.3",
 		"phpcompatibility/phpcompatibility-wp": "^2.1",
 		"phpro/grumphp-shim": "^1.5",
 		"roave/security-advisories": "dev-latest",
-		"vimeo/psalm": "^5.20",
 		"wp-coding-standards/wpcs": "^3.0"
 	},
 	"scripts": {
 		"cs": "./vendor/bin/phpcs",
-		"cb": "./vendor/bin/phpcbf",
-		"psalm": "./vendor/bin/psalm"
+		"cb": "./vendor/bin/phpcbf"
 	},
 	"scripts-descriptions": {
 		"cs": "Run PHP CodeSniffer on codebase using custom ruleset.",
-		"cb": "Run PHP Code Beautifier and Fixer on codebase using custom ruleset.",
-		"psalm": "Run psalm on codebase using custom ruleset."
+		"cb": "Run PHP Code Beautifier and Fixer on codebase using custom ruleset."
 	}
 }

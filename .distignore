@@ -5,7 +5,6 @@
 /node_modules
 /vendor
 /src
-/psalm
 
 .cursorignore
 .distignore
@@ -27,7 +26,6 @@ package.json
 package-lock.json
 phpcs.xml.dist
 phpunit.xml.dist
-psalm.xml.dist
 README.md
 webpack.config.js
 yarn.lock

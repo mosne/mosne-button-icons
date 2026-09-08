@@ -4,7 +4,6 @@
 /.cursor export-ignore
 /src export-ignore
 /tests export-ignore
-/psalm export-ignore
 /node_modules export-ignore
 /vendor export-ignore
 /.cursorignore export-ignore
@@ -27,6 +26,5 @@
 /package-lock.json export-ignore
 /phpcs.xml.dist export-ignore
 /phpunit.xml.dist export-ignore
-/psalm.xml.dist export-ignore
 /README.md export-ignore
 /webpack.config.js export-ignore
