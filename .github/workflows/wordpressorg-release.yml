@@ -1,0 +1,29 @@
+name: "Publish New Release on WordPress.org"
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  wordpress-release:
+    name: "New release on WordPress.org"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - id: set-vars
+        name: "Set variables from .plugin-data file"
+        run: |
+          VERSION=$(jq -r '.version' .plugin-data)
+          SLUG=$(jq -r '.slug' .plugin-data)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
+
+      - id: deploy
+        name: "WordPress.org Plugin Deploy"
+        if: ${{ !github.event.release.prerelease }}
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: ${{ steps.set-vars.outputs.slug }}

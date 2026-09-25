@@ -3,7 +3,7 @@
  */
 import { __ } from '@wordpress/i18n';
 import { RichTextToolbarButton } from '@wordpress/block-editor';
-import { starFilled } from '@wordpress/icons';
+import { shapes } from './icon';
 import { insertObject, remove } from '@wordpress/rich-text';
 import { useState } from '@wordpress/element';
 
@@ -89,7 +89,7 @@ export default function Edit( {
 	return (
 		<>
 			<RichTextToolbarButton
-				icon={ starFilled }
+				icon={ shapes }
 				title={
 					isObjectActive
 						? __( 'Replace icon', 'mosne-button-icons' )
