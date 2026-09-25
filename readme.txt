@@ -4,7 +4,7 @@ Tags:              icons, rich-text, button, block-editor, phosphor
 Requires at least: 7.1
 Tested up to:      7.1
 Requires PHP:      7.2
-Stable tag:        0.2.1
+Stable tag:        0.2.2
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,7 +23,7 @@ The format stores an icon name. On the front end, WordPress renders the SVG with
 * Inline icon Rich Text format in the block editor toolbar
 * Works in paragraphs, headings, buttons, and other Rich Text fields
 * Uses the WordPress Icons API (`wp_get_icon`, `wp_register_icon`)
-* Optional Phosphor icon collection under icon-collections/ (enabled by default)
+* Ships with a Phosphor icon collection under icon-collections/
 * Toggle built-in collections via Settings or a filter
 * Front-end SVG rendering that inherits text color
 * Accessible labels via alt / aria-label (empty means decorative)
