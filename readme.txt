@@ -4,7 +4,7 @@ Tags:              icons, rich-text, button, block-editor, phosphor
 Requires at least: 7.1
 Tested up to:      7.1
 Requires PHP:      7.2
-Stable tag:        0.2.2
+Stable tag:        0.2.3
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,7 +26,7 @@ The format stores an icon name. On the front end, WordPress renders the SVG with
 * Ships with a Phosphor icon collection under icon-collections/
 * Toggle built-in collections via Settings or a filter
 * Front-end SVG rendering that inherits text color
-* Accessible labels via alt / aria-label (empty means decorative)
+* Accessible labels via screen-reader text (empty means decorative)
 
 == Installation ==
 
@@ -65,6 +65,12 @@ This plugin ships SVG icons from [Phosphor Icons](https://phosphoricons.com), di
 Phosphor Icons is licensed under the [MIT License](https://opensource.org/licenses/MIT). Copyright (c) 2023 Phosphor Icons.
 
 == Changelog ==
+
+= 0.2.3 =
+* Render icon labels with screen-reader text instead of aria-label on the SVG.
+
+= 0.2.2 =
+* Prepare WordPress.org release packaging and assets.
 
 = 0.2.1 =
 * Move Phosphor icons under icon-collections/ for multiple collections.
