@@ -18,7 +18,7 @@ The format stores an icon name. On the front end, WordPress renders the SVG with
 * Optional Phosphor icon collection under `icon-collections/` (enabled by default)
 * Toggle built-in collections via Settings or the `mosne_button_icons_collection_enabled` filter
 * Front-end SVG rendering that inherits text color
-* Accessible labels via alt / aria-label (empty means decorative)
+* Accessible labels via screen-reader text (empty means decorative)
 
 ## Requirements
 

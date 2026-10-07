@@ -5,7 +5,7 @@
  * Description:       Insert WordPress icons inline in Rich Text, the same way as inline images.
  * Requires at least: 7.1
  * Requires PHP:      7.2
- * Version:           0.2.2
+ * Version:           0.2.3
  * Author:            Mosne
  * Author URI:        https://mosne.it
  * License:           GPL-2.0-or-later
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MOSNE_BUTTON_ICONS_VERSION', '0.2.2' );
+define( 'MOSNE_BUTTON_ICONS_VERSION', '0.2.3' );
 define( 'MOSNE_BUTTON_ICONS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MOSNE_BUTTON_ICONS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -248,12 +248,16 @@ function mosne_button_icons_render_placeholder( $tag ) {
 	if ( ! is_string( $label ) ) {
 		$label = $processor->get_attribute( 'aria-label' );
 	}
+	if ( ! is_string( $label ) ) {
+		$label = '';
+	}
 
+	// Keep the SVG decorative; expose the label via screen-reader text instead.
 	$svg = wp_get_icon(
 		$name,
 		array(
 			'size'  => null,
-			'label' => is_string( $label ) ? $label : '',
+			'label' => '',
 		)
 	);
 
@@ -266,7 +270,11 @@ function mosne_button_icons_render_placeholder( $tag ) {
 		? sprintf( ' style="%s"', esc_attr( $style ) )
 		: '';
 
-	return sprintf( '<span class="wp-inline-icon"%s>%s</span>', $style_attr, $svg );
+	$sr_text = '' !== $label
+		? sprintf( '<span class="screen-reader-text">%s</span>', esc_html( $label ) )
+		: '';
+
+	return sprintf( '<span class="wp-inline-icon"%s>%s%s</span>', $style_attr, $sr_text, $svg );
 }
 
 /**
